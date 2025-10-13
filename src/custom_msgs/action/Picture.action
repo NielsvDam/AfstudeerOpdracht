@@ -1,0 +1,12 @@
+# File: Picture.action
+
+# Goal
+# No goal is included
+---
+# Result
+LocatedObject[] detected_blocks
+LocatedObject[] unknown_areas
+
+---
+# Feedback
+bool picture_taken

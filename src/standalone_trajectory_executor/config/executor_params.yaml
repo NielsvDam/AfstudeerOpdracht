@@ -1,0 +1,4 @@
+/**:
+   ros__parameters:
+    action_name: execute_trajectory2
+    controller: rv5as_controller/joint_trajectory

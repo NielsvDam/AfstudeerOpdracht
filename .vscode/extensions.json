@@ -1,0 +1,23 @@
+{
+	"recommendations": [
+		"ms-vscode.cpptools",
+		"ms-vscode.cpptools-extension-pack",
+		"ms-vscode.cpptools-themes",
+		"fleexo.cpp-class-creator",
+		"amiralizadeh9480.cpp-helper",
+		"xaver.clang-format",
+		"twxs.cmake",
+		"cheshirekow.cmake-format",
+		"bierner.markdown-mermaid",
+		"darkriszty.markdown-table-prettify",
+		"pkief.material-icon-theme",
+		"yutengjing.open-in-external-app",
+		"ms-python.vscode-pylance",
+		"ms-python.python",
+		"ms-python.debugpy",
+		"foxundermoon.shell-format",
+		"jkearins.action-buttons-ext",
+		"tomoki1207.pdf",
+		"mtsmfm.vscode-stl-viewer"
+	]
+}

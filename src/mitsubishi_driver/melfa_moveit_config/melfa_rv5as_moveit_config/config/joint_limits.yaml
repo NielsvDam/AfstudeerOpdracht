@@ -1,0 +1,55 @@
+# joint_limits.yaml allows the dynamics properties specified in the URDF to be overwritten or augmented as needed
+
+# For beginners, we downscale velocity and acceleration limits.
+# You can always specify higher scaling factors (<= 1.0) in your motion requests.  # Increase the values below to 1.0 to always move at maximum speed.
+default_velocity_scaling_factor: 0.1
+default_acceleration_scaling_factor: 0.1
+
+# Specific joint properties can be changed with the keys [max_position, min_position, max_velocity, max_acceleration]
+# Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
+joint_limits:
+  rv5as_joint_1:
+    has_velocity_limits: true
+    max_velocity: 2.1642100000000002
+    has_acceleration_limits: true
+    max_acceleration: 6.0
+    has_position_limits: true
+    min_position: 0.4363323129985824    # 25 degrees * (π / 180)
+    max_position: 2.792526803190927     # 160 degrees * (π / 180)
+  rv5as_joint_2:
+    has_velocity_limits: true
+    max_velocity: 2.1642100000000002
+    has_acceleration_limits: true
+    max_acceleration: 6.0
+    has_position_limits: true
+    min_position: -0.5759586531581288   # -33 degrees * (π / 180)   
+    max_position: 1.3089969389957472    # 75 degrees * (π / 180)
+  rv5as_joint_3:
+    has_velocity_limits: true
+    max_velocity: 2.1642100000000002
+    has_acceleration_limits: true
+    max_acceleration: 6.0
+    has_position_limits: true
+    min_position: 0.6981317007977318    # 40 degrees * (π / 180)
+    max_position: 2.6179938779914944    # 150 degrees * (π / 180)
+  rv5as_joint_4:
+    has_velocity_limits: true
+    max_velocity: 3.4382999999999999
+    has_acceleration_limits: true
+    max_acceleration: 9.0
+    has_position_limits: true
+    min_position: -2.0943951023931953     # -150 degrees * (π / 180)
+    max_position: 2.0943951023931953      # 120 degrees * (π / 180)
+  rv5as_joint_5:
+    has_velocity_limits: true
+    max_velocity: 6.2133700000000003
+    has_acceleration_limits: true
+    max_acceleration: 18.0
+  rv5as_joint_6:
+    has_velocity_limits: true
+    max_velocity: 6.2831799999999998
+    has_acceleration_limits: true
+    max_acceleration: 18.0
+    has_position_limits: true
+    min_position: -3.12413936106985     # -179 degrees * (π / 180)
+    max_position: 3.12413936106985      # 179 degrees * (π / 180)

@@ -1,0 +1,52 @@
+Diagnostics:
+  ClangTidy:
+    Add:
+      - "*"
+    Remove:
+      - abseil-* # for (specific) Google-projects and we don not work there...
+      - altera-* # same as above
+      - android-* # same as above
+      - fuchsia-* # same as above
+      - zircon-* # same as above
+      - google-objc* # we do not use objective-c
+      - google-readability-avoid-underscore-in-googletest-name # to much noise if enabled/ too Google specific
+      - google-readability-todo # same as above
+      - google-runtime-int # same as above
+      - google-upgrade-googletest-case # same as above
+      - llvm* # this is specific for the LLVM-project
+      - modernize-use-trailing-return-type # we will not use trailing return types
+      - misc-confusable-identifiers # takes ages to complete, our editors already warn us about it.
+      - cppcoreguidelines-explicit-virtual-functions # we learned to use virtual functions for destructors at HAN.
+      - hicpp-use-override # same as above
+      - modernize-use-override # same as above
+      - modernize-avoid-bind # in ROS the recommended way to assign callbacks is by using bind, we preffer using them.
+      - cppcoreguidelines-macro-usage #  we should not be too worried by allowing DEFINES for constants.
+      - cppcoreguidelines-special-member-functions # The checks are triggered when implementing singletons, we should actually NOT create the move constructors.
+      - hicpp-special-member-functions # same as above
+      - readability-avoid-const-params-in-decls # We do not want to introduce inconsistency between functions in our header and source file. To avoid confusing.
+      - hicpp-use-equals-default # We dont want to be forced to use '= default;' after our constructors or destructors, we want to implement them anyways even if they are empty.
+      - modernize-use-equals-default # same as above
+      - cert-dcl51-cpp # A expensive check for just checking if names start with an underscores.
+      - cert-dcl37-c # same as above
+      - bugprone-use-after-move #
+      - cert-err33-c # We dont have problems with not using the returned value of a function.
+      - cppcoreguidelines-pro-type-vararg # need c-style varargs for ROS2, no way around it
+      - hicpp-vararg # same as above
+      - readability-function-cognitive-complexity # The check gets triggered by simply calling RCLCPP_INFO.
+      - hicpp-no-array-decay # same as above
+      - cppcoreguidelines-pro-bounds-array-to-pointer-decay # same as above
+      - cppcoreguidelines-avoid-magic-numbers # Numbers are usually not magic when working with robotics. 
+      - readability-magic-numbers # same as above
+      - modernize-use-auto # We do not want to use auto for everything, sometimes using the typename increases readability.
+      - hicpp-use-auto # same as above
+      - modernize-pass-by-value # We do not want to use pass by value in combination with std::move instead of using smart pointers.
+      - bugprone-easily-swappable-parameters # Its normal to have a function with two parameters that are the same type.
+      - readability-identifier-length # Short names for variables are allowed.
+      - readability-else-after-return # Else after return is not a problem.
+      - readability-redundant-member-init # It may be redundant but can increase readability, so why not allow it.
+      - modernize-use-nodiscard # We do not want to force the use of [[nodiscard]].
+      - cert-err58-cpp # Checks all static variables where the initializer for the object may throw an exception, but by running the program it will instantly throw these exception anyways.
+      - cppcoreguidelines-non-private-member-variables-in-classes # its allowed to have protected (or public) member variables.
+      - misc-non-private-member-variables-in-classes # same as above
+      - readability-inconsistent-declaration-parameter-name # Why would method overloading be a problem? Its common practice.
+      - readability-use-anyofallof # We do not want to force the use of any_of, it does not make the code more readable in almost all cases.

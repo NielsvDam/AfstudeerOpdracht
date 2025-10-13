@@ -1,0 +1,9 @@
+# File: MachineControl.srv
+
+# Request
+string command  # "start", "pause", or "stop"
+
+---
+# Response
+bool success
+string message

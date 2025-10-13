@@ -1,0 +1,200 @@
+{
+	"workbench.colorCustomizations": {
+		"statusBar.background": "#1c7549bd",
+	},
+	"terminal.integrated.scrollback": 1000000000,
+	"actionButtons": {
+		"reloadButton": "$(refresh)", // vscode icons https://code.visualstudio.com/api/references/icons-in-labels
+		"commands": [
+			{
+				"cwd": "${workspaceFolder}",
+				"tooltip": "Format current file",
+				"name": "$(request-changes) Format",
+				"color": "white",
+				"singleInstance": true,
+				"command": "./scripts/format.sh ${file}",
+			},
+			{
+				"cwd": "${workspaceFolder}",
+				"tooltip": "Build all packages",
+				"name": "$(wrench) Build all",
+				"color": "white",
+				"singleInstance": true,
+				"command": "clear && ./scripts/build.sh",
+			},
+			{
+				"cwd": "${workspaceFolder}",
+				"tooltip": "Build app",
+				"name": "$(wrench) Build custom packages",
+				"color": "white",
+				"singleInstance": true,
+				"command": "clear && ./scripts/build.sh object_detector machine_state_control standalone_trajectory_executor hmi",
+			},
+			{
+				"cwd": "${workspaceFolder}",
+				"tooltip": "Test",
+				"name": "$(play) Build & Test",
+				"color": "white",
+				"singleInstance": true,
+				"command": "clear && ./scripts/build.sh object_detector machine_state_control standalone_trajectory_executor hmi && ./scripts/test.sh"
+			},
+			{
+				"cwd": "${workspaceFolder}",
+				"tooltip": "Test",
+				"name": "$(play) Test",
+				"color": "white",
+				"singleInstance": true,
+				"command": "clear && ./scripts/test.sh"
+			},
+			{
+				"cwd": "${workspaceFolder}",
+				"tooltip": "Lint",
+				"name": "$(play) Lint",
+				"color": "white",
+				"singleInstance": true,
+				"command": "./scripts/lint.sh"
+			},
+			{
+				"cwd": "${workspaceFolder}",
+				"tooltip": "Launch",
+				"name": "$(play) Launch drivers",
+				"color": "white",
+				"singleInstance": true,
+				"command": "sudo -u $USER -i", // fix environment variables because vscode doesn't load .bashrc
+				"extraCommands": [
+					"cd ${workspaceFolder}",
+					"./scripts/launch_drivers.sh"
+				]
+			},
+			{
+				"cwd": "${workspaceFolder}",
+				"tooltip": "Launch",
+				"name": "$(play) Launch drivers fake",
+				"color": "white",
+				"singleInstance": true,
+				"command": "sudo -u $USER -i", // fix environment variables because vscode doesn't load .bashrc
+				"extraCommands": [
+					"cd ${workspaceFolder}",
+					"./scripts/launch_drivers_fake_robot.sh"
+				]
+			},
+			{
+				"cwd": "${workspaceFolder}",
+				"tooltip": "Launch",
+				"name": "$(play) Launch app",
+				"color": "white",
+				"singleInstance": true,
+				"command": "sudo -u $USER -i", // fix environment variables because vscode doesn't load .bashrc
+				"extraCommands": [
+					"cd ${workspaceFolder}",
+					"./scripts/launch_app.sh"
+				]
+			},
+			{
+				"cwd": "${workspaceFolder}",
+				"tooltip": "Launch",
+				"name": "$(play) Launch app fake",
+				"color": "white",
+				"singleInstance": true,
+				"command": "sudo -u $USER -i", // fix environment variables because vscode doesn't load .bashrc
+				"extraCommands": [
+					"cd ${workspaceFolder}",
+					"./scripts/launch_app_fake_detector.sh"
+				]
+			}
+		]
+	},
+	"cmakeFormat.args": [
+		"--config=${workspaceFolder}/.cmake-format"
+	],
+	"files.associations": {
+		"cctype": "cpp",
+		"clocale": "cpp",
+		"cmath": "cpp",
+		"csignal": "cpp",
+		"cstdarg": "cpp",
+		"cstddef": "cpp",
+		"cstdio": "cpp",
+		"cstdlib": "cpp",
+		"cstring": "cpp",
+		"ctime": "cpp",
+		"cwchar": "cpp",
+		"cwctype": "cpp",
+		"any": "cpp",
+		"array": "cpp",
+		"atomic": "cpp",
+		"hash_map": "cpp",
+		"strstream": "cpp",
+		"bit": "cpp",
+		"*.tcc": "cpp",
+		"bitset": "cpp",
+		"chrono": "cpp",
+		"codecvt": "cpp",
+		"compare": "cpp",
+		"complex": "cpp",
+		"concepts": "cpp",
+		"condition_variable": "cpp",
+		"coroutine": "cpp",
+		"cstdint": "cpp",
+		"deque": "cpp",
+		"forward_list": "cpp",
+		"list": "cpp",
+		"map": "cpp",
+		"set": "cpp",
+		"string": "cpp",
+		"unordered_map": "cpp",
+		"unordered_set": "cpp",
+		"vector": "cpp",
+		"exception": "cpp",
+		"algorithm": "cpp",
+		"functional": "cpp",
+		"iterator": "cpp",
+		"memory": "cpp",
+		"memory_resource": "cpp",
+		"numeric": "cpp",
+		"optional": "cpp",
+		"random": "cpp",
+		"ratio": "cpp",
+		"regex": "cpp",
+		"source_location": "cpp",
+		"string_view": "cpp",
+		"system_error": "cpp",
+		"tuple": "cpp",
+		"type_traits": "cpp",
+		"utility": "cpp",
+		"fstream": "cpp",
+		"future": "cpp",
+		"initializer_list": "cpp",
+		"iomanip": "cpp",
+		"iosfwd": "cpp",
+		"iostream": "cpp",
+		"istream": "cpp",
+		"limits": "cpp",
+		"mutex": "cpp",
+		"new": "cpp",
+		"numbers": "cpp",
+		"ostream": "cpp",
+		"semaphore": "cpp",
+		"shared_mutex": "cpp",
+		"sstream": "cpp",
+		"stdexcept": "cpp",
+		"stop_token": "cpp",
+		"streambuf": "cpp",
+		"thread": "cpp",
+		"cfenv": "cpp",
+		"cinttypes": "cpp",
+		"typeindex": "cpp",
+		"typeinfo": "cpp",
+		"variant": "cpp",
+		"*.ipp": "cpp",
+		"valarray": "cpp",
+		"qgroupbox": "cpp",
+		"charconv": "cpp",
+		"ranges": "cpp",
+		"span": "cpp",
+		"expected": "cpp",
+		"*.inc": "cpp",
+		"stack": "cpp"
+	},
+	"cmake.sourceDirectory": "/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/src/custom_msgs",
+}

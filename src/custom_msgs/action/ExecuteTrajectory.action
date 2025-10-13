@@ -1,0 +1,13 @@
+# File: ExecuteTrajectory.action
+
+# Goal
+trajectory_msgs/JointTrajectory trajectory
+float64 joint_tollerance
+
+---
+# Result
+bool success
+
+---
+# Feedback
+# No feedback is included.

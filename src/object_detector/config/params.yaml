@@ -1,0 +1,17 @@
+/**:
+   ros__parameters:
+   
+      fake_detection_poses: 
+         # indices: x, y, z, qx, qy, qz, qw
+         pose_1: [0.136, 0.498, -0.199, 0.663, -0.749, 0.0, 0.0]
+         pose_2: [0.19, 0.69, -0.199,-0.9239, -0.3827, 0.0, 0.0]
+         pose_3: [0.236, 0.498, -0.199, -0.707, -0.707, 0.0, 0.0]
+         pose_4: [-0.236, 0.398, -0.199, -0.9239, -0.3827, 0.0, 0.0]
+
+      # please adjust below values in HMI. values are overwritten at runtime.
+      camera_tuning_x: 0.0
+      camera_tuning_y: 0.0
+      camera_tuning_z: 0.0
+      camera_tuning_roll: 0.0
+      camera_tuning_pitch: 0.0
+      camera_tuning_yaw: 0.0

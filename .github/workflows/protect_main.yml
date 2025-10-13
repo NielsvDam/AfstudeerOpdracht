@@ -1,0 +1,48 @@
+name: protect_main
+on:
+  workflow_dispatch:  # Allows manual triggering of the workflow
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+      - '*.md'
+      - '*.docx'
+jobs:
+  protect_main:
+    runs-on: ubuntu-22.04
+    container:
+      image: ghcr.io/${{ github.repository }}/ros_base_image:main
+      credentials:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.CONTAINER_REGISTERY }}
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures complete commit history for merge purposes
+      # Perform the merge locally to validate the actual result.
+      - name: Checkout pre-merge
+        if: github.event_name == 'pull_request'
+        run: |
+          git config --global --add safe.directory '*' # fix git dubious ownership, its obviously not a unknown repo.
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions"
+          git fetch --all
+          git checkout ${{ github.event.pull_request.base.ref }}
+          git pull
+          git merge origin/${{ github.event.pull_request.head.ref }} --allow-unrelated-histories # commits directly on the github site are flagged unrelated.
+      - name: Compile the code
+        run: |
+          . /opt/ros/humble/setup.sh
+          ./scripts/build.sh
+      - name: Run tests
+        run: |
+          ./scripts/test.sh
+      - name: Run linters
+        run: | 
+          ./scripts/lint.sh
