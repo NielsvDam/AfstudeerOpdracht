@@ -17,7 +17,7 @@
 		"ms-python.debugpy",
 		"foxundermoon.shell-format",
 		"jkearins.action-buttons-ext",
-		"tomoki1207.pdf",
+		// "tomoki1207.pdf", // Commented out due to current workspace already containing LaTeX-pdf, which gives a warning when combined with vscode-pdf.
 		"mtsmfm.vscode-stl-viewer"
 	]
 }

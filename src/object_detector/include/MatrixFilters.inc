@@ -45,7 +45,7 @@ void MatrixFilters::nanFilter(Matrix<T>& matrix)
 template <typename T>
 void MatrixFilters::sufaceExtractionFilter(Matrix<T>& matrix)
 {
-    // collect the higher portions of each column
+    // collect the higher portions of each row
     Matrix<T> rowFilteredMatrix(matrix);
     for (std::size_t col = 0; col < matrix.getCols(); ++col)
     {

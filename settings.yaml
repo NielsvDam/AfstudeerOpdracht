@@ -2,68 +2,68 @@ package_settings:
   object_detect_node:
     camera_tuning_x:
       type: DOUBLE
-      value: 0.0001
+      value: -0.0040000000000000001 # Default = -0.004
       slider_min: -0.03
       slider_max: 0.03
       step: 0.0001
     camera_tuning_y:
       type: DOUBLE
-      value: -0.0001
+      value: -0.0016000000000000001 # Default = -0.0016
       slider_min: -0.03
       slider_max: 0.03
       step: 0.0001
     camera_tuning_z:
       type: DOUBLE
-      value: 0.0001
+      value: 0.00020000000000000001 # Default = 0.0002
       slider_min: -0.03
       slider_max: 0.03
       step: 0.0001
     camera_tuning_roll:
       type: DOUBLE
-      value: 0.0048999999999999998
+      value: 0.0048999999999999998 # Default = 0.0049
       slider_min: -0.03
       slider_max: 0.03
       step: 0.0001
     camera_tuning_pitch:
       type: DOUBLE
-      value: -0.0052000000000000006
+      value: -0.0052000000000000006 # Default = -0.0052
       slider_min: -0.03
       slider_max: 0.03
       step: 0.0001
     camera_tuning_yaw:
       type: DOUBLE
-      value: 0.0074000000000000003
+      value: 0.0074000000000000003 # Default = 0.0074
       slider_min: -0.03
       slider_max: 0.03
       step: 0.0001
   machine_state_control_node:
     picture_distance:
       type: DOUBLE
-      value: 0.37
+      value: 0.3 # Default = 0.3
       slider_min: 0.2
-      slider_max: 0.7
+      slider_max: 0.7 # Default max = 0.4
       step: 0.01
     velocity_scaling:
       type: DOUBLE
-      value: 0.11
+      value: 0.26000000000000001 # Default = 0.26
       slider_min: 0.0
       slider_max: 1.0
       step: 0.01
     acceleration_scaling:
       type: DOUBLE
-      value: 0.7
+      value: 0.7 # Default = 0.7
       slider_min: 0.0
       slider_max: 1.0
       step: 0.01
     ignore_block_collisions:
       type: BOOL
-      value: false
+      value: false # Default = false
       slider_min: 0.0
       slider_max: 1.0
       step: 1.0
     place_z_offset:
       type: DOUBLE
-      value: 0.0
+      value: 0.0 # Default = 0.0
       slider_min: 0.0
       slider_max: 0.1
       step: 0.001
