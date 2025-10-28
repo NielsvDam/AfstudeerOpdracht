@@ -351,6 +351,7 @@ sensor_msgs::msg::PointCloud2::SharedPtr ObjectDetectNode::waitForPointCloud()
     // Filter the matrix
     detectionMatrix = originalMatrix;
     MatrixFilters::nanFilter(detectionMatrix);
+    debuggingMatrix = detectionMatrix; // Output NAN-filtered matrix without extracting surface as debugging matrix.
     MatrixFilters::sufaceExtractionFilter(detectionMatrix);
 
     // MatrixFilters::morphOpen(detectionMatrix, morphologyKernelSize, morphologyIterations);
