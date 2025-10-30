@@ -10,6 +10,18 @@
 #include "MatrixFilters.hpp"
 #include "Conversion.hpp"
 
+#define DELAYED
+// Additions to allow for temporary delay to be added.
+#ifdef DELAYED
+
+#define START_DELAY 500
+#define END_DELAY 100
+
+#include <thread>
+#include <chrono>
+
+#endif
+
 ObjectDetectNode::~ObjectDetectNode() {}
 
 ObjectDetectNode::ObjectDetectNode()
@@ -207,6 +219,10 @@ void ObjectDetectNode::executePictureAction(
     // NOLINTNEXTLINE (performance-unnecessary-value-param) // can't change definition in ros sourcecode
     const std::shared_ptr<rclcpp_action::ServerGoalHandle<custom_msgs::action::Picture>> goal_handle)
 {
+
+    #ifdef DELAYED
+    std::this_thread::sleep_for(std::chrono::milliseconds(START_DELAY));
+    #endif
     // retrieve the latest pointcloud
     RCLCPP_INFO(this->get_logger(), "waiting for pointcloud");
     const sensor_msgs::msg::PointCloud2::SharedPtr pointCloud = waitForPointCloud();
@@ -224,6 +240,10 @@ void ObjectDetectNode::executePictureAction(
         auto result = std::make_shared<custom_msgs::action::Picture::Result>();
         goal_handle->abort(result);
     }
+
+    #ifdef DELAYED
+    std::this_thread::sleep_for(std::chrono::milliseconds(END_DELAY));
+    #endif
 
     // send feedback that the picture has been taken.
     auto feedback = std::make_shared<custom_msgs::action::Picture::Feedback>();
