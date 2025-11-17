@@ -1,0 +1,1 @@
+/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/build/custom_msgs/rosidl_generator_py/custom_msgs/msg/_located_object_s.c

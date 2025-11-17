@@ -1,0 +1,1 @@
+/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/build/melfa_rv5as_moveit_config/ament_cmake_environment_hooks/local_setup.bash

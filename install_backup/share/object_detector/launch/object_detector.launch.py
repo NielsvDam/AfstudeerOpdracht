@@ -1,0 +1,1 @@
+/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/src/object_detector/launch/object_detector.launch.py

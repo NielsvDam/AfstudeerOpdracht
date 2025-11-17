@@ -1,0 +1,1 @@
+/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/src/mitsubishi_driver/melfa_moveit_config/melfa_rv5as_moveit_config/launch/setup_assistant.launch.py

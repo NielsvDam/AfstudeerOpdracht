@@ -1,0 +1,1 @@
+/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/build/melfa_msgs/rosidl_generator_py/melfa_msgs/srv/_gpio_configure_s.c

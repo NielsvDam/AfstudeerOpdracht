@@ -1,0 +1,1 @@
+/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/build/machine_state_control/ament_cmake_environment_hooks/local_setup.zsh

@@ -1,0 +1,1 @@
+/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/build/melfa_msgs/ament_cmake_core/melfa_msgsConfig-version.cmake

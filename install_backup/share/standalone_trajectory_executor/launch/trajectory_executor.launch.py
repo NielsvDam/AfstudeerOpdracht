@@ -1,0 +1,1 @@
+/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/src/standalone_trajectory_executor/launch/trajectory_executor.launch.py
