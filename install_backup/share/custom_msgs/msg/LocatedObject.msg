@@ -1,1 +1,0 @@
-/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/src/custom_msgs/msg/LocatedObject.msg

@@ -1,1 +1,0 @@
-/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/src/mitsubishi_driver/melfa_description/launch/view_rv8crl.launch.py

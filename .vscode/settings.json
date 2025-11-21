@@ -8,6 +8,14 @@
 		"commands": [
 			{
 				"cwd": "${workspaceFolder}",
+				"tooltip":"Open sourced & rviz fixed terminal.",
+				"name": "Sourced Terminal",
+				"color": "white",
+				"singleInstance": true,
+				"command": "source /opt/ros/humble/setup.bash && source install/local_setup.bash && export QT_QPA_PLATFORM=xcb"
+			},
+			{
+				"cwd": "${workspaceFolder}",
 				"tooltip": "Format current file",
 				"name": "$(request-changes) Format",
 				"color": "white",

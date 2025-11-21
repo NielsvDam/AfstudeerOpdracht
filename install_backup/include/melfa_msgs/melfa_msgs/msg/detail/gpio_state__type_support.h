@@ -1,1 +1,0 @@
-/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/build/melfa_msgs/rosidl_generator_c/melfa_msgs/msg/detail/gpio_state__type_support.h

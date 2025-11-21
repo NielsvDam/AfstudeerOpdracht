@@ -1,1 +1,0 @@
-/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/build/melfa_bringup/ament_cmake_core/melfa_bringupConfig-version.cmake

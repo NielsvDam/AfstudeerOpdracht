@@ -1,1 +1,0 @@
-/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/build/launch_package/ament_cmake_environment_hooks/local_setup.bash

@@ -1,3 +1,0 @@
-New driver is to be inserted here.
-
-For now: SimReal for IRB120 support, which contains abb_ros2 aswell.

@@ -1,1 +1,0 @@
-/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/src/mitsubishi_driver/melfa_description/launch/view_rh6frh5520.launch.py

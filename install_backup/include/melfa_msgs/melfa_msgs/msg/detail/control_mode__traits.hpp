@@ -1,1 +1,0 @@
-/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/build/melfa_msgs/rosidl_generator_cpp/melfa_msgs/msg/detail/control_mode__traits.hpp

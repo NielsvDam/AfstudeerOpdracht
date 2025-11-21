@@ -1,1 +1,0 @@
-/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/build/object_detector/ament_cmake_core/object_detectorConfig-version.cmake

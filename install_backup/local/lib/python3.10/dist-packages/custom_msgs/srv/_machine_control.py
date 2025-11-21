@@ -1,1 +1,0 @@
-/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/build/custom_msgs/rosidl_generator_py/custom_msgs/srv/_machine_control.py

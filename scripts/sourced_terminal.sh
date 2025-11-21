@@ -1,0 +1,3 @@
+source /opt/ros/humble/setup.bash # Always source ROS without chance to fail if not build yet. (This is considered the "underlay", shared between all ROS systems on this device.)
+source install/setup.bash # Source the ROS "overlay" of this workspace in specific, whilst also sourcing the underlay again. This way any funky settings/conflicts can be resolved by overwriting the "underlay" again.
+export QT_QPA_PLATFORM=xcb # Due to software updates and them being incompatable with wayland, any Qt rendered GUI's will crash if this setting is not applied to the terminal.
