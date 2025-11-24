@@ -38,7 +38,7 @@ def generate_launch_description():
 
     melfa_driver_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('melfa_bringup'), 'launch', 'rv5as_control_custom.launch.py')
+            os.path.join(get_package_share_directory('melfa_bringup'), 'launch', 'rv5as_control_custom.launch.py') #<<! ABB needed >>
         ),
         launch_arguments={
             'use_fake_hardware': use_fake_hardware,
@@ -49,7 +49,7 @@ def generate_launch_description():
 
     melfa_movit_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource( 
-            os.path.join(get_package_share_directory('melfa_rv5as_moveit_config'), 'launch', 'rv5as_moveit.launch.py')
+            os.path.join(get_package_share_directory('melfa_rv5as_moveit_config'), 'launch', 'rv5as_moveit.launch.py') #<<! ABB needed >>
         )
     )
 
@@ -60,8 +60,8 @@ def generate_launch_description():
     )
 
     launches = [
-        melfa_driver_launch,
-        melfa_movit_launch,
+        melfa_driver_launch, # <<! Change name, looks better. >>
+        melfa_movit_launch, # <<! Change name, looks better. >>
         standalone_trajectory_executor_launch
     ] 
 

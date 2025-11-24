@@ -11,7 +11,7 @@
 				"tooltip":"Open sourced & rviz fixed terminal.",
 				"name": "Sourced Terminal",
 				"color": "white",
-				"singleInstance": true,
+				"singleInstance": false,
 				"command": ". ./scripts/sourced_terminal.sh"
 			},
 			{

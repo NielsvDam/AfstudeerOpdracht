@@ -1,0 +1,16 @@
+To-Do - Robot integration
+
+Files excluding C++ code:
+
+Launch_package
+- launch_app.launch.py
+- launch_drivers.launch.py
+
+Standalone_Trajectory_Executor
+- executor_params.yaml
+
+Object Detector
+- rv5as.urdf.xacro (/config/)
+
+Machine State Control
+- machine_state_control.launch.py
