@@ -1,0 +1,13 @@
+/**:
+   ros__parameters:
+      planning_group: irb120_group
+      gripper_tcp_link: irb120_default_tcp
+      camera_tcp_link: irb120_camera_tcp
+      crate_inner_bottom_center_link: crate_inner_bottom_center
+
+      # please adjust below values in HMI. values are overwritten at runtime.
+      picture_distance: 0.3 # distance from the camera to the crate (when taking a picture) (in meters)
+      velocity_scaling: 0.3
+      acceleration_scaling: 0.7
+      ignore_block_collisions: false
+      place_z_offset: 0.0

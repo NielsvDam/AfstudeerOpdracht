@@ -19,7 +19,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'robot_ip',
-            default_value='192.168.10.40',
+            default_value='192.168.10.40', # <<! ABB - Change IP to match service port host address. >>
             description='Robot IP address'
         )
     )
@@ -38,7 +38,7 @@ def generate_launch_description():
 
     melfa_driver_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('melfa_bringup'), 'launch', 'rv5as_control_custom.launch.py') #<<! ABB needed >>
+            os.path.join(get_package_share_directory('abb_bringup'), 'launch', 'abb_control.launch.py') # Was originally "melfa_bringup" and "rv5as_control_custom.launch.py"
         ),
         launch_arguments={
             'use_fake_hardware': use_fake_hardware,
@@ -49,7 +49,7 @@ def generate_launch_description():
 
     melfa_movit_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource( 
-            os.path.join(get_package_share_directory('melfa_rv5as_moveit_config'), 'launch', 'rv5as_moveit.launch.py') #<<! ABB needed >>
+            os.path.join(get_package_share_directory('abb_bringup'), 'launch', 'abb_moveit.launch.py') # Was "melfa_rv5as_moveit_config" and "rv5as_moveit.launch.py"
         )
     )
 

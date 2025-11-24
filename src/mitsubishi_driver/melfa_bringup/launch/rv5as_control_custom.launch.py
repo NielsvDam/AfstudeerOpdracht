@@ -43,7 +43,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'description_package',
-            default_value='melfa_description',
+            default_value='abb_irb120_support', # Was "melfa_description" <<! Unsure >>
             description='Description package with robot URDF/xacro files. Usually the argument \
             is not set, it enables use of a custom description.',
         )
@@ -51,7 +51,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'description_file',
-            default_value='rv5as_custom/rv5as.urdf.xacro',
+            default_value='irb120.urdf.xacro', # Was 'rv5as_custom/rv5as.urdf.xacro' <<! Unsure >>
             description='URDF/XACRO description file with the robot.',
         )
     )
@@ -81,7 +81,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'robot_controller',
-            default_value='rv5as_controller',
+            default_value='irb120_controller',
             description='Robot controller to start.',
         )
     )
@@ -95,14 +95,14 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'robot_ip',
-            default_value='192.168.0.20',
+            default_value='192.168.0.20', # <<! ABB ip needed. >>
             description='Robot IP.',
         )
     )
     declared_arguments.append(
         DeclareLaunchArgument(
             'robot_port',
-            default_value='10000',
+            default_value='10000', # <<! ABB port needed. >>
             description='Robot port.',
         )
     )
@@ -199,7 +199,7 @@ def generate_launch_description():
         ]
     )
     rviz_config_file = PathJoinSubstitution(
-        [FindPackageShare(description_package), 'rviz', 'rv5as.rviz']
+        [FindPackageShare(description_package), 'rviz', 'irb120.rviz'] # <<! ABB needed >>
     )
 
     control_node = Node(

@@ -25,3 +25,6 @@ ros2 run rqt_joint_trajectory_controller rqt_joint_trajectory_controller
 
 # Show all currently active/existing Nodes and their Topic connections.
 ros2 run rqt_graph rqt_graph
+
+
+# Commands to run the system with the new drivers (?)
