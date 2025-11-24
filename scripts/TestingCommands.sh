@@ -17,3 +17,11 @@ points:
       sec: 5
       nanosec: 0"
 
+# Check outgoing joint_trajectories in 'formatted' view from terminal.
+ros2 topic echo /joint_trajectory_controller/joint_trajectory
+
+# Joint trajectory external controller, sends similar mesages to above with a handy GUI.
+ros2 run rqt_joint_trajectory_controller rqt_joint_trajectory_controller
+
+# Show all currently active/existing Nodes and their Topic connections.
+ros2 run rqt_graph rqt_graph
