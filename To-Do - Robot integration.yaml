@@ -4,7 +4,9 @@ Files excluding C++ code:
 
 Launch_package
 - launch_app.launch.py - Done
+-- Lotsa debugging here.
 - launch_drivers.launch.py - Done
+-- Same for here.
 
 Standalone_Trajectory_Executor
 - executor_params.yaml - Done
@@ -35,6 +37,7 @@ Needed additions:
 
 
 !!! Use -d -a as extra arguments for ros launch commands for stack traces.
+
 
 
 - 
