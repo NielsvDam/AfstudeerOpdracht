@@ -23,7 +23,7 @@ Machine State Control
 Needed additions:
 
 - irb120_moveit_config to replace melfa_rv5as_moveit_config : Used by machine_state_control.launch.py etc, and used by the motion planning.
-  
+  --- Done
 
 - irb120_controller replacement for rv5as_controller : Used by /Standalone_Trajectory_Executor/config/executor_params.yaml
 - irb120 rviz packages : Used by app launch.
@@ -32,3 +32,9 @@ Needed additions:
   Working on abb_moveit.launch.py
 
 - custom_io_params.yaml needs to be updated : Used by control launch in rv5as version, and as rv5as_hardware shortcut in melfa_description urdf files.
+
+
+!!! Use -d -a as extra arguments for ros launch commands for stack traces.
+
+
+- 
