@@ -1,4 +1,4 @@
 /**:
    ros__parameters:
     action_name: execute_trajectory2
-    controller: irb120_controller/joint_trajectory #<<! ABB needed >>
+    controller: abb_irb120_controller/joint_trajectory #<<! ABB needed >>

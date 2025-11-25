@@ -51,7 +51,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'description_file',
-            default_value='irb120.urdf.xacro', # Was 'rv5as_custom/rv5as.urdf.xacro' <<! Unsure >>
+            default_value='abb_irb120.urdf.xacro', # Was 'rv5as_custom/rv5as.urdf.xacro' <<! Unsure >>
             description='URDF/XACRO description file with the robot.',
         )
     )
@@ -81,7 +81,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'robot_controller',
-            default_value='irb120_controller',
+            default_value='abb_irb120_controller',
             description='Robot controller to start.',
         )
     )
@@ -199,7 +199,7 @@ def generate_launch_description():
         ]
     )
     rviz_config_file = PathJoinSubstitution(
-        [FindPackageShare(description_package), 'rviz', 'irb120.rviz'] # <<! ABB needed >>
+        [FindPackageShare(description_package), 'rviz', 'abb_irb120.rviz'] # <<! ABB needed >>
     )
 
     control_node = Node(

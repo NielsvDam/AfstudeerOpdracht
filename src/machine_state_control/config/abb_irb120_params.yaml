@@ -1,8 +1,8 @@
 /**:
    ros__parameters:
-      planning_group: irb120_group
-      gripper_tcp_link: irb120_default_tcp
-      camera_tcp_link: irb120_camera_tcp
+      planning_group: abb_irb120_group
+      gripper_tcp_link: abb_irb120_default_tcp
+      camera_tcp_link: abb_irb120_camera_tcp
       crate_inner_bottom_center_link: crate_inner_bottom_center
 
       # please adjust below values in HMI. values are overwritten at runtime.

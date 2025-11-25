@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="abb_irb120">
     <xacro:arg name="initial_positions_file" default="initial_positions.yaml" />
 
-    <!-- Import irb120 urdf file -->
+    <!-- Import rv5as urdf file -->
     <!-- <xacro:include filename="$(find melfa_description)/urdf/rv5as_custom/rv5as.urdf" /> -->
     <xacro:include filename="package://abb_irb120_support/urdf/abb_irb120.urdf.xacro" />
 

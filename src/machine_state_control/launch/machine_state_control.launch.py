@@ -11,7 +11,7 @@ def generate_launch_description():
     config = os.path.join(
       get_package_share_directory('machine_state_control'),
       'config',
-      'irb120_params.yaml' # 'rv5as_params.yaml'
+      'abb_irb120_params.yaml' # 'rv5as_params.yaml'
     )
 
     moveit_config = MoveItConfigsBuilder("abb_irb120", package_name="abb_irb120_moveit_config").to_moveit_configs() #<<! ABB Addition Needed >>
