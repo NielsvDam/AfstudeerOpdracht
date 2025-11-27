@@ -1,0 +1,12 @@
+Files to alter:
+
+- object_detector/config/params.yaml <- Give it new poses.
+- launch_package/rviz/rv5as_camera.rviz AND/OR abb_irb120_setup.rviz needs to be updated fot proper usage and/or display.
+
+
+- Need to update camera & tool TCP in URDF file for ABB IRB120. (Currently misconfigured.)
+
+
+"executor_params.yaml" : controller : "rv5as_controller/joint_trajectory" needs to be changed to the right set.
+
+"servo_node" : moveit_servo : Check if this is compatible with the driver, keep a eye on abb_moveit.launch.py for this reason.

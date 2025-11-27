@@ -1,5 +1,6 @@
 . install/setup.sh
 export LC_NUMERIC=en_US.UTF-8 # see https://github.com/frankaemika/franka_ros2/issues/58
+export QT_QPA_PLATFORM=xcb # Fix a Qt issue after some updates on Ubuntu.
 
 if [ $1 = "debug" ];
 then

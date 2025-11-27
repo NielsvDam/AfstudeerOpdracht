@@ -53,7 +53,7 @@ def generate_launch_description():
             'use_fake_hardware': use_fake_hardware,
             'controller_type': controller_type,
             'moveit_config_package' : moveit_config_package,
-            'robot_ip': robot_ip
+            'rws_ip': robot_ip
         }.items()
     )
 

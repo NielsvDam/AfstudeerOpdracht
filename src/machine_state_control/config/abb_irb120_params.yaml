@@ -1,6 +1,6 @@
 /**:
    ros__parameters:
-      planning_group: abb_irb120_group
+      planning_group: abb_irb120_arm
       gripper_tcp_link: abb_irb120_default_tcp
       camera_tcp_link: abb_irb120_camera_tcp
       crate_inner_bottom_center_link: crate_inner_bottom_center
