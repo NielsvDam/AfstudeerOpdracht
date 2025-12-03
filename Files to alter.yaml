@@ -7,6 +7,6 @@ Files to alter:
 - Need to update camera & tool TCP in URDF file for ABB IRB120. (Currently misconfigured.)
 
 
-"executor_params.yaml" : controller : "rv5as_controller/joint_trajectory" needs to be changed to the right set.
+"executor_params.yaml" : controller : "rv5as_controller/joint_trajectory" needs to be changed to the right set, pretty sure it's still not good.
 
 "servo_node" : moveit_servo : Check if this is compatible with the driver, keep a eye on abb_moveit.launch.py for this reason.

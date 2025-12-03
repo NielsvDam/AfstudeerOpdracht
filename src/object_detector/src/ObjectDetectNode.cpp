@@ -89,8 +89,8 @@ void ObjectDetectNode::publishCameraTransform()
 
     geometry_msgs::msg::TransformStamped transform;
     transform.header.stamp = this->get_clock()->now();
-    transform.header.frame_id = "rv5as_camera_tcp";
-    transform.child_frame_id = "camera_link";
+    transform.header.frame_id = "camera_tcp"; // HARDCODED, TODO | rv5as_camera_tcp
+    transform.child_frame_id = "camera_link"; // HARDCODED, TODO | camera_link
     transform.transform.translation.x = x;
     transform.transform.translation.y = y;
     transform.transform.translation.z = z;

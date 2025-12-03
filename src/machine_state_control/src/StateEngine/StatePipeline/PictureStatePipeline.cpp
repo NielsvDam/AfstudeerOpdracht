@@ -5,6 +5,8 @@
 #include "StateEngine/Instruction/PictureInstruction.hpp"  // instruction::PictureInstruction
 #include "MachineStateControlNode.hpp"
 
+// DEBUG
+
 namespace state_pipeline
 {
     PictureStatePipeline::~PictureStatePipeline() {}
@@ -22,6 +24,10 @@ namespace state_pipeline
         // get the frame of the bottom of the crate
         const std::string crateBottomFrame =
             MachineStateControlNode::getInstance()->get_parameter("crate_inner_bottom_center_link").as_string();
+            // <<! DEBUG prints, remove when not needed. >>
+            RCLCPP_INFO(logger, "Got the following position: ");
+            cameraPose = moveGroup->getCurrentPose(crateBottomFrame);
+            RCLCPP_INFO(logger, "Pose: position(%.3f, %.3f, %.3f), rotation(%f, %f, %f, %f)",cameraPose.pose.position.x,cameraPose.pose.position.y,cameraPose.pose.position.z,cameraPose.pose.orientation.w,cameraPose.pose.orientation.x,cameraPose.pose.orientation.y,cameraPose.pose.orientation.z);
         // get the picture distance
         double pictureDistance = MachineStateControlNode::getInstance()->get_parameter("picture_distance").as_double();
         // get the pose the frame
@@ -29,6 +35,8 @@ namespace state_pipeline
         // adjust the picture pose
         cameraPose.pose.position.z += pictureDistance;
         RCLCPP_INFO(logger, "PictureStatePipeline created.");
+        // <<! DEBUG >>
+        RCLCPP_INFO(logger, "Pose: position(%.3f, %.3f, %.3f), rotation(%f, %f, %f, %f)",cameraPose.pose.position.x,cameraPose.pose.position.y,cameraPose.pose.position.z,cameraPose.pose.orientation.w,cameraPose.pose.orientation.x,cameraPose.pose.orientation.y,cameraPose.pose.orientation.z);
     }
 
     void PictureStatePipeline::setAlternativePose(const geometry_msgs::msg::PoseStamped& pose)
@@ -55,7 +63,7 @@ namespace state_pipeline
             {
                 try
                 {
-                    auto trajectory = createTrajectory(cameraPose, "rv5as_camera_tcp", "PTP");
+                    auto trajectory = createTrajectory(cameraPose, "camera_tcp", "PTP"); // HARDCODED: TODO, was rv5as_camera_tcp
                     // return the direct movement instruction
                     return std::make_shared<instruction::MovementInstruction>(
                         trajectory,
@@ -67,9 +75,9 @@ namespace state_pipeline
                 {
                     RCLCPP_INFO(logger, "Failed to create trajectory directly to PicturePose, trying a indirect strategy");
                     indirectStrategy = true; // set the indirect strategy flag
-                    geometry_msgs::msg::Pose prevPose = getStartPose("rv5as_default_tcp");
+                    geometry_msgs::msg::Pose prevPose = getStartPose("tool_tcp");  // HARDCODED : TODO
                     prevPose.position.z = 0.0; // set the z position to 0 (which is above the crate)
-                    auto trajectory = createTrajectory(prevPose, "rv5as_default_tcp", "LIN");
+                    auto trajectory = createTrajectory(prevPose, "tool_tcp", "LIN");  // HARDCODED : TODO
                     // return the indirect movement instruction
                     return std::make_shared<instruction::MovementInstruction>(
                         trajectory,
@@ -81,7 +89,7 @@ namespace state_pipeline
             {
                 if (indirectStrategy)
                 {
-                    auto trajectory = createTrajectory(cameraPose, "rv5as_camera_tcp", "PTP");
+                    auto trajectory = createTrajectory(cameraPose, "camera_tcp", "PTP"); // HARDCODED : TODO, see line 66 or near.
                     return std::make_shared<instruction::MovementInstruction>(
                         trajectory,
                         getGoalJointTolerance(),

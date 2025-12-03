@@ -63,7 +63,7 @@ namespace pick_solution_finder
         moveit::core::RobotState robotState(robotModel);
         // set the robot state to have the TCP at the given pose
         const moveit::core::JointModelGroup* jointModelGroup = robotModel->getJointModelGroup(moveGroup->getName());
-        bool ikSuccess = robotState.setFromIK(jointModelGroup, pose, "rv5as_default_tcp");
+        bool ikSuccess = robotState.setFromIK(jointModelGroup, pose, "tool_tcp"); // HARDCODED : TODO
 
         // Check valid IK solution (if the state is actually possible)
         if (!ikSuccess)
@@ -118,12 +118,12 @@ namespace pick_solution_finder
         std::string filteredSecond = filterBlockName(second);
         // Define a list of problematic contacts
         const static std::vector<std::pair<std::string, std::string>> problematicContacts = {
-            {"rv5as_schrunk_assista", "collision_block"},
-            {"rv5as_schrunk_assista", "crate"},
-            {"rv5as_wrist", "crate"},
-            {"rv5as_camera", "crate"},
-            {"rv5as_wrist", "rv5as_table_base"},
-            {"rv5as_camera", "rv5as_table_base"}};
+            {"tool_gripper", "collision_block"}, // collision_block check.
+            {"tool_gripper", "crate"},
+            {"link_5", "crate"}, // rv5as_wrist to link_5
+            {"camera_mount", "crate"}, 
+            {"link_5", "robot_stand"},   // The following have changed: "robot_stand" < "rv5as_table_base"; "camera_mount" < "rv5as_camera"; "tool_gripper" < "rv5as_schrunk_assista"
+            {"camera_mount", "robot_stand"}}; // HARDCODED : Might need a fix, currently manually changed.
 
         // Check if the contact pair is in the list of problematic contacts
         for (const auto& contact : problematicContacts)

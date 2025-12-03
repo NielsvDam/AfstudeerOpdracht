@@ -81,12 +81,12 @@ void ConfigurationNode::park()
 {
     auto action_client = rclcpp_action::create_client<control_msgs::action::FollowJointTrajectory>(
         this,
-        "/rv5as_controller/follow_joint_trajectory");
+        "/abb_irb120_arm_controller/follow_joint_trajectory");
 
     // Wait for the action server to be available
     while (!action_client->wait_for_action_server(std::chrono::seconds(1)))
     {
-        RCLCPP_WARN(this->get_logger(), "Waiting for action server /rv5as_controller/follow_joint_trajectory...");
+        RCLCPP_WARN(this->get_logger(), "Waiting for action server /abb_irb120_arm_controller/follow_joint_trajectory...");
     }
 
     // First goal
@@ -168,12 +168,12 @@ void ConfigurationNode::unPark()
 {
     auto action_client = rclcpp_action::create_client<control_msgs::action::FollowJointTrajectory>(
         this,
-        "/rv5as_controller/follow_joint_trajectory");
+        "/abb_irb120_arm_controller/follow_joint_trajectory");
 
     // Wait for the action server to be available
     while (!action_client->wait_for_action_server(std::chrono::seconds(1)))
     {
-        RCLCPP_WARN(this->get_logger(), "Waiting for action server /rv5as_controller/follow_joint_trajectory...");
+        RCLCPP_WARN(this->get_logger(), "Waiting for action server /abb_irb120_arm_controller/follow_joint_trajectory...");
     }
 
     // First goal

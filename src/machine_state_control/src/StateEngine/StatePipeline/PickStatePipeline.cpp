@@ -54,7 +54,7 @@ namespace state_pipeline
             case 1: // move to aboveCratePose.
             {
                 geometry_msgs::msg::Pose pose = pickSolution->getAboveCratePose();
-                auto trajectory = createTrajectory(pose, "rv5as_default_tcp", "PTP");
+                auto trajectory = createTrajectory(pose, "tool_tcp", "PTP"); // HARDCODED : TODO
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
                     getGoalJointTolerance(),
@@ -63,7 +63,7 @@ namespace state_pipeline
             case 2: // move to retract pose.
             {
                 geometry_msgs::msg::Pose pose = pickSolution->getRetractPose();
-                auto trajectory = createTrajectory(pose, "rv5as_default_tcp", "PTP");
+                auto trajectory = createTrajectory(pose, "tool_tcp", "PTP"); // HARDCODED : TODO
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
                     getGoalJointTolerance(),
@@ -72,7 +72,7 @@ namespace state_pipeline
             case 3: // move to pick pose.
             {
                 geometry_msgs::msg::Pose pose = pickSolution->getPickPose();
-                auto trajectory = createTrajectory(pose, "rv5as_default_tcp", "LIN", 0.08);
+                auto trajectory = createTrajectory(pose, "tool_tcp", "LIN", 0.08); // HARDCODED : TODO
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
                     getGoalJointTolerance(),
@@ -89,7 +89,7 @@ namespace state_pipeline
             case 6: // move to retract pose.
             {
                 geometry_msgs::msg::Pose pose = pickSolution->getRetractPose();
-                auto trajectory = createTrajectory(pose, "rv5as_default_tcp", "LIN", 0.08);
+                auto trajectory = createTrajectory(pose, "tool_tcp", "LIN", 0.08); // HARDCODED : TODO
                 markCompleted();
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,

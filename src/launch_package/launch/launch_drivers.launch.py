@@ -20,7 +20,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'robot_ip',
-            default_value='192.168.10.11', # <<! ABB - Change IP to match service port host address. >>
+            default_value='192.168.125.1', # <<! ABB - Change IP to match service port host address. >>
             description='Robot IP address'
         )
     )

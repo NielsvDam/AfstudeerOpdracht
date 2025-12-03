@@ -81,7 +81,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'robot_controller',
-            default_value='abb_irb120_controller',
+            default_value='abb_irb120_arm_controller',
             description='Robot controller to start.',
         )
     )

@@ -33,7 +33,7 @@ namespace state_pipeline
             case 0: // move to PlacePose
             {
                 placePose = getNextPlacePose();
-                auto trajectory = createTrajectory(placePose, "rv5as_default_tcp", "LIN");
+                auto trajectory = createTrajectory(placePose, "tool_tcp", "LIN"); // HARDCODED : TODO
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
                     getGoalJointTolerance(),
@@ -51,7 +51,7 @@ namespace state_pipeline
             {
                 placePose.position.y += 0.0185; // move back just a bit, to avoid collision with the block
                 placePose.position.z += 0.02;   // move up a bit.
-                auto trajectory = createTrajectory(placePose, "rv5as_default_tcp", "LIN", 0.08);
+                auto trajectory = createTrajectory(placePose, "tool_tcp", "LIN", 0.08); // HARDCODED : TODO
                 markCompleted();
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,

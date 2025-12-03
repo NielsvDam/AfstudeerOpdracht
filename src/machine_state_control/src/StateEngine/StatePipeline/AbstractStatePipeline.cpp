@@ -183,7 +183,7 @@ namespace state_pipeline
     {
         // Create a new Path message
         nav_msgs::msg::Path path;
-        path.header.frame_id = "world"; // Set the frame ID to the appropriate frame
+        path.header.frame_id = "world"; // Set the frame ID to the appropriate frame: world.
         path.header.stamp = rclcpp::Clock().now();
 
         for (const auto& point : trajectory.joint_trajectory.points)
@@ -194,7 +194,7 @@ namespace state_pipeline
             robotState.update();
 
             // Get the TCP position
-            auto tcpTransform = robotState.getGlobalLinkTransform("rv5as_default_tcp");
+            auto tcpTransform = robotState.getGlobalLinkTransform("tool_tcp"); // HARDCODED : TODO | WAS "rv5as_default_tcp"
             geometry_msgs::msg::PoseStamped pose;
             pose.header.frame_id = "world";
             pose.header.stamp = rclcpp::Clock().now();

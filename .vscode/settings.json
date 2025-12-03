@@ -206,7 +206,8 @@
 	},
 	"cmake.sourceDirectory": "/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/src/custom_msgs",
 	"urdf-visualizer.packages": {
-  		"abb_irb120_support": "src/abb_drivers/abb_ros2/robot_specific_config/abb_irb120_support"
+  		"abb_irb120_support": "src/abb_drivers/abb_ros2/robot_specific_config/abb_irb120_support",
+		"melfa_description": "src/mitsubishi_driver/melfa_description"
 	},
 	"python.autoComplete.extraPaths": [
 		"/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/install/local/lib/python3.10/dist-packages",

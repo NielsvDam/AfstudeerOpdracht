@@ -4,7 +4,7 @@ export QT_QPA_PLATFORM=xcb # Fix a Qt issue after some updates on Ubuntu.
 
 if [ $1 = "debug" ];
 then
-    ros2 launch launch_package launch_drivers.launch.py use_fake_hardware:=false robot_ip:=192.168.10.11 -d -a; # Debug level + all subprocesses.
+    ros2 launch launch_package launch_drivers.launch.py use_fake_hardware:=false robot_ip:=192.168.125.1 -d -a; # Debug level + all subprocesses.
 else 
-    ros2 launch launch_package launch_drivers.launch.py use_fake_hardware:=false robot_ip:=192.168.10.11;
+    ros2 launch launch_package launch_drivers.launch.py use_fake_hardware:=false robot_ip:=192.168.125.1;
 fi # Normal.

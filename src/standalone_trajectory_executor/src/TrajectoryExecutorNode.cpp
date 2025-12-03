@@ -15,13 +15,16 @@ TrajectoryExecutorNode::TrajectoryExecutorNode()
           std::bind(&TrajectoryExecutorNode::handleActionCancel, this, std::placeholders::_1),
           std::bind(&TrajectoryExecutorNode::handleActionAccepted, this, std::placeholders::_1))),
       // Create a subscription on the joint states (positions), to monitor the robot's state
+
+      // The action/state that the standalone trajectory executor listens to is called ""
+
       jointStatesSubscription(this->create_subscription<sensor_msgs::msg::JointState>(
           "/joint_states",
           10,
           std::bind(&TrajectoryExecutorNode::jointStateCallback, this, std::placeholders::_1))),
       // Create the publisher of the trajectory
       trajectoryToControllerPublisher(
-          this->create_publisher<trajectory_msgs::msg::JointTrajectory>(get_parameter("controller").as_string(), 10))
+          this->create_publisher<trajectory_msgs::msg::JointTrajectory>(get_parameter("controller").as_string(), 10)) // <<! The current controller might be wrong in exec params, check this. >>
 {
     RCLCPP_INFO(get_logger(), "Stand-alone trajectory executor initialized.");
 }
