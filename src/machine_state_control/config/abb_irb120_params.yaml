@@ -1,9 +1,9 @@
 /**:
    ros__parameters:
       planning_group: abb_irb120_arm
-      gripper_tcp_link: abb_irb120_default_tcp
-      camera_tcp_link: abb_irb120_camera_tcp
+      gripper_tcp_link: link_6 # Check this, current value requires offset, some way to fix the issue from extended chain/group would help remove this. (By turning it into tool_tcp.)
       crate_inner_bottom_center_link: crate_inner_bottom_center
+      camera_tcp_link : camera_tcp
 
       # please adjust below values in HMI. values are overwritten at runtime.
       picture_distance: 0.3 # distance from the camera to the crate (when taking a picture) (in meters)

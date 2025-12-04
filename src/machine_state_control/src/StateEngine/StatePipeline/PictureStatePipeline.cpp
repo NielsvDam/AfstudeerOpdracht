@@ -24,10 +24,10 @@ namespace state_pipeline
         // get the frame of the bottom of the crate
         const std::string crateBottomFrame =
             MachineStateControlNode::getInstance()->get_parameter("crate_inner_bottom_center_link").as_string();
-            // <<! DEBUG prints, remove when not needed. >>
-            RCLCPP_INFO(logger, "Got the following position: ");
-            cameraPose = moveGroup->getCurrentPose(crateBottomFrame);
-            RCLCPP_INFO(logger, "Pose: position(%.3f, %.3f, %.3f), rotation(%f, %f, %f, %f)",cameraPose.pose.position.x,cameraPose.pose.position.y,cameraPose.pose.position.z,cameraPose.pose.orientation.w,cameraPose.pose.orientation.x,cameraPose.pose.orientation.y,cameraPose.pose.orientation.z);
+        // <<! DEBUG prints, remove when not needed. >>
+        RCLCPP_INFO(logger, "Got the following position: ");
+        cameraPose = moveGroup->getCurrentPose(crateBottomFrame);
+        RCLCPP_INFO(logger, "Pose: position(%.3f, %.3f, %.3f), rotation(%f, %f, %f, %f)",cameraPose.pose.position.x,cameraPose.pose.position.y,cameraPose.pose.position.z,cameraPose.pose.orientation.w,cameraPose.pose.orientation.x,cameraPose.pose.orientation.y,cameraPose.pose.orientation.z);
         // get the picture distance
         double pictureDistance = MachineStateControlNode::getInstance()->get_parameter("picture_distance").as_double();
         // get the pose the frame
@@ -36,9 +36,34 @@ namespace state_pipeline
         cameraPose.pose.position.z += pictureDistance;
         // rotate the picture pose to correct for any strange rotations
         // TODO: Get these orientations/calculate them from the URDF file, in order to prevent hardcoding them.
-        // #define RAD_ANGLE_45 0.707107; // So essentially: Replace this with a function to get and transform the rotations from rpy out of the file to quaternion, preferably through external file config.
-        // cameraPose.pose.orientation.w -= RAD_ANGLE_45;
-        // cameraPose.pose.orientation.z -= RAD_ANGLE_45;
+        // So essentially: Replace this with a function to get and transform the rotations from rpy out of the file to quaternion, preferably through external file config.
+        #define RAD_45 0.707107
+        cameraPose.pose.orientation.w = RAD_45;
+        cameraPose.pose.orientation.y = RAD_45;
+        cameraPose.pose.orientation.x = 0.0;
+        cameraPose.pose.orientation.z = 0.0;
+
+        // Offset the cameraPose 
+            // At first, set all the names that'll be used for this bit.
+            const std::string cameraName = MachineStateControlNode::getInstance()->get_parameter("camera_tcp_link").as_string();
+            const std::string gripperName = MachineStateControlNode::getInstance()->get_parameter("gripper_tcp_link").as_string();
+
+            // Then, retrieve the positions.
+            cameraTcp = moveGroup->getCurrentPose(cameraName);
+            gripperTcp = moveGroup->getCurrentPose(gripperName);
+            // Then, to do actual transformations on the objects, reconstruct the TF transforms from the messages.
+            // Set up the buffer used to get the functions.
+            // Set up buffer
+            tf2::Transform gripperTransform, cameraTransform;
+            tf2::fromMsg(gripperTcp.pose,gripperTransform);
+            tf2::fromMsg(cameraTcp.pose,cameraTransform);
+            tf2::Transform gripperTransformed = gripperTransform.inverse() * cameraTransform; // This should be the the transform to get something from the gripper (rn link_6) to the camera (rn camera_tcp).
+            // Apply the values we just made to the transform, to try: Just do it via a multiplication.
+            gripperTransform = gripperTransform * gripperTransformed;
+            auto inter = tf2::toMsg(gripperTransform);
+
+
+
         RCLCPP_INFO(logger, "PictureStatePipeline created.");
         // <<! DEBUG >>
         RCLCPP_INFO(logger, "Pose: position(%.3f, %.3f, %.3f), rotation(%f, %f, %f, %f)",cameraPose.pose.position.x,cameraPose.pose.position.y,cameraPose.pose.position.z,cameraPose.pose.orientation.w,cameraPose.pose.orientation.x,cameraPose.pose.orientation.y,cameraPose.pose.orientation.z);
@@ -68,7 +93,7 @@ namespace state_pipeline
             {
                 try
                 {
-                    auto trajectory = createTrajectory(cameraPose, "camera_tcp", "PTP"); // HARDCODED: TODO, was rv5as_camera_tcp :: It appears to not be fixed by setting the camera_tcp to the new one, as this seems to utterly ruin the path planner.
+                    auto trajectory = createTrajectory(cameraPose, "link_6", "PTP"); // HARDCODED: TODO, was rv5as_link_6 :: It appears to not be fixed by setting the link_6 to the new one, as this seems to utterly ruin the path planner.
                     // return the direct movement instruction
                     return std::make_shared<instruction::MovementInstruction>(
                         trajectory,
@@ -80,9 +105,9 @@ namespace state_pipeline
                 {
                     RCLCPP_INFO(logger, "Failed to create trajectory directly to PicturePose, trying a indirect strategy");
                     indirectStrategy = true; // set the indirect strategy flag
-                    geometry_msgs::msg::Pose prevPose = getStartPose("camera_tcp");  // HARDCODED : TODO : was tool_tcp
+                    geometry_msgs::msg::Pose prevPose = getStartPose("link_6");  // HARDCODED : TODO : was link_6
                     prevPose.position.z = 0.0; // set the z position to 0 (which is above the crate)
-                    auto trajectory = createTrajectory(prevPose, "camera_tcp", "LIN");  // HARDCODED : TODO
+                    auto trajectory = createTrajectory(prevPose, "link_6", "LIN");  // HARDCODED : TODO
                     // return the indirect movement instruction
                     return std::make_shared<instruction::MovementInstruction>(
                         trajectory,
@@ -94,7 +119,7 @@ namespace state_pipeline
             {
                 if (indirectStrategy)
                 {
-                    auto trajectory = createTrajectory(cameraPose, "camera_tcp", "PTP"); // HARDCODED : TODO, see line 66 or near.
+                    auto trajectory = createTrajectory(cameraPose, "link_6", "PTP"); // HARDCODED : TODO, see line 66 or near.
                     return std::make_shared<instruction::MovementInstruction>(
                         trajectory,
                         getGoalJointTolerance(),
