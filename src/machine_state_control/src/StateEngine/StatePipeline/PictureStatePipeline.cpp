@@ -68,7 +68,7 @@ namespace state_pipeline
             {
                 try
                 {
-                    auto trajectory = createTrajectory(cameraPose, "tool_tcp", "PTP"); // HARDCODED: TODO, was rv5as_camera_tcp :: It appears to not be fixed by setting the camera_tcp to the new one, as this seems to utterly ruin the path planner.
+                    auto trajectory = createTrajectory(cameraPose, "camera_tcp", "PTP"); // HARDCODED: TODO, was rv5as_camera_tcp :: It appears to not be fixed by setting the camera_tcp to the new one, as this seems to utterly ruin the path planner.
                     // return the direct movement instruction
                     return std::make_shared<instruction::MovementInstruction>(
                         trajectory,
@@ -80,9 +80,9 @@ namespace state_pipeline
                 {
                     RCLCPP_INFO(logger, "Failed to create trajectory directly to PicturePose, trying a indirect strategy");
                     indirectStrategy = true; // set the indirect strategy flag
-                    geometry_msgs::msg::Pose prevPose = getStartPose("tool_tcp");  // HARDCODED : TODO : was tool_tcp
+                    geometry_msgs::msg::Pose prevPose = getStartPose("camera_tcp");  // HARDCODED : TODO : was tool_tcp
                     prevPose.position.z = 0.0; // set the z position to 0 (which is above the crate)
-                    auto trajectory = createTrajectory(prevPose, "tool_tcp", "LIN");  // HARDCODED : TODO
+                    auto trajectory = createTrajectory(prevPose, "camera_tcp", "LIN");  // HARDCODED : TODO
                     // return the indirect movement instruction
                     return std::make_shared<instruction::MovementInstruction>(
                         trajectory,
@@ -94,7 +94,7 @@ namespace state_pipeline
             {
                 if (indirectStrategy)
                 {
-                    auto trajectory = createTrajectory(cameraPose, "tool_tcp", "PTP"); // HARDCODED : TODO, see line 66 or near.
+                    auto trajectory = createTrajectory(cameraPose, "camera_tcp", "PTP"); // HARDCODED : TODO, see line 66 or near.
                     return std::make_shared<instruction::MovementInstruction>(
                         trajectory,
                         getGoalJointTolerance(),

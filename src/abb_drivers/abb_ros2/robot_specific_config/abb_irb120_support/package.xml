@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<package format="2">
+  <name>abb_irb120_support</name>
+  <version>0.0.1</version>
+  <description>
+    <p>
+      ROS-Industrial support for the ABB IRB 120.
+    </p>
+    <p>
+      This package contains configuration data, 3D models and launch files
+      for ABB IRB 120 manipulators. (No variants are supported yet.)
+    </p>
+    <p>
+      Joint limits and max joint velocities are based on the configurations in from IFRA's SimRealRobotControl. Go check 'out on github.
+    </p>
+    <p>
+      Before using any of the configuration files and / or meshes included
+      in this package, be sure to check they are correct for the particular
+      robot model and configuration you intend to use them with. Not doing so will likely just cause your program to error.
+    </p>
+  </description>
+  <author>Mikel Bueno Viso</author> <!-- The actual author, I just compiled it, copied it over and smacked the tooling onto it. -->
+  <maintainer email="nielserikvandam@gmail.com">Niels van Dam</maintainer>
+  <license>Apache2</license>
+
+  <url type="website">http://wiki.ros.org/</url> <!-- No URL exists for this yet, since it's not intentionally supported.-->
+  <url type="bugtracker">https://github.com/ros-industrial/abb_experimental/issues</url>
+  <url type="repository">https://github.com/ros-industrial/abb_experimental</url>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>robot_state_publisher</exec_depend> <!-- Leaving these here for now.-->
+  <exec_depend>joint_state_publisher_gui</exec_depend> <!-- Leaving these here for now.-->
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
