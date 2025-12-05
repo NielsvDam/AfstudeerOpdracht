@@ -38,7 +38,7 @@
   <!-- Arguments -->
   <xacro:arg name="use_fake_hardware" default="true"/>
   <xacro:property name="use_fake_hardware" value="$(arg use_fake_hardware)"/> <!-- Not implemented, TODO. -->
-  <xacro:arg name="rws_ip" default="192.168.125.1"/>
+  <xacro:arg name="rws_ip" default="192.168.125.12"/>
   <xacro:property name="rws_ip" value="$(arg rws_ip)"/>
   <xacro:arg name="rws_port" default="80"/>
   <xacro:property name="rws_port" value="$(arg rws_port)"/>
@@ -674,24 +674,24 @@
   <!-- Links & joints for tcp's. -->
 
   <link name="tool_tcp" />
-  <link name="camera_link" />
+  <link name="camera" />
   <link name="camera_tcp" />
 
-  <joint name="camera_link-link_5_joint" type="fixed">
+  <joint name="camera-link_5_joint" type="fixed">
     <origin xyz="0.125 0 0.06" rpy="0 0 0" />
     <parent link="link_5" />
-    <child link="camera_link" />
+    <child link="camera" />
   </joint>
 
-  <joint name="tool_tcp-flange_joint" type="fixed">
+  <joint name="tool_tcp-link_6_joint" type="fixed">
     <origin xyz="0.095 0 0" rpy="0 0 0" />
-    <parent link="flange" />
+    <parent link= "link_6" />
     <child link="tool_tcp" />
   </joint>
 
-  <joint name="camera_tcp-camera_link_joint" type="fixed">
+  <joint name="camera_tcp-camera_joint" type="fixed">
     <origin xyz="0 -0.0175 0" rpy="0 0 0" />
-    <parent link="camera_link" />
+    <parent link="camera" />
     <child link="camera_tcp" />
   </joint>
 

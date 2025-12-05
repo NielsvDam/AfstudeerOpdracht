@@ -73,7 +73,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             "rws_ip",
-            default_value="192.168.125.1",
+            default_value="192.168.125.12",
             description="IP of RWS computer. \
             Used only if 'use_fake_hardware' parameter is false.",
         )

@@ -31,8 +31,11 @@ namespace pick_solution_finder
             // test the poses for collisions
             for (const auto& pickPose : potentionalPickPoses)
             {
+                // Rotate the just generated pose to account for 90degree angle difference due to URDF definition.
+                auto rotatedPickPose = PickPoseUtils::rotatePose(pickPose,0.0,0.0,0.0); // <<! TODO:  Check which rotation is needed & crashes. >>
+
                 // Check if the pick pose causes a collision
-                if (!isPoseInCollision(pickPose))
+                if (!isPoseInCollision(rotatedPickPose))
                 {
                     // Try to find a retract pose that does not cause a collision
                     for (bool relative : {true, false})
@@ -40,12 +43,12 @@ namespace pick_solution_finder
                         // Get a retract pose (relative or absolute)
                         const static double retractDistance = 0.03;
                         geometry_msgs::msg::Pose retractPose =
-                            PickPoseUtils::calculateRetractPose(pickPose, retractDistance, relative);
+                            PickPoseUtils::calculateRetractPose(rotatedPickPose, retractDistance, relative);
                         // Check if the retract pose causes a collision
                         if (!isPoseInCollision(retractPose))
                         {
                             // The solution is found.
-                            return std::make_shared<PickSolution>(pickPose, retractPose);
+                            return std::make_shared<PickSolution>(rotatedPickPose, retractPose); // Changed all pickPose to rotatedPickPose since declaration at currently line 35.
                         }
                     }
                 }

@@ -55,6 +55,7 @@ namespace state_pipeline
             {
                 geometry_msgs::msg::Pose pose = pickSolution->getAboveCratePose();
                 auto trajectory = createTrajectory(pose, "tool_tcp", "PTP"); // HARDCODED : TODO
+                RCLCPP_INFO(logger,"Abovecratepose reached.");
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
                     getGoalJointTolerance(),
@@ -64,6 +65,7 @@ namespace state_pipeline
             {
                 geometry_msgs::msg::Pose pose = pickSolution->getRetractPose();
                 auto trajectory = createTrajectory(pose, "tool_tcp", "PTP"); // HARDCODED : TODO
+                RCLCPP_INFO(logger,"Retractpose reached.");
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
                     getGoalJointTolerance(),
@@ -73,6 +75,7 @@ namespace state_pipeline
             {
                 geometry_msgs::msg::Pose pose = pickSolution->getPickPose();
                 auto trajectory = createTrajectory(pose, "tool_tcp", "LIN", 0.08); // HARDCODED : TODO
+                RCLCPP_INFO(logger,"Retractpose reached.");
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
                     getGoalJointTolerance(),

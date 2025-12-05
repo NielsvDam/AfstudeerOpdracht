@@ -16,7 +16,7 @@
         <joint name="joint_4"/>
         <joint name="joint_5"/>
         <joint name="joint_6"/>
-        <!-- <chain base_link="base_link" tip_link="tool_tcp"/> -->
+        <joint name="tool_tcp-link_6_joint"/>
     </group>
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
     <group_state name="all_zeros" group="abb_irb120_arm">
@@ -43,28 +43,18 @@
     <disable_collisions link1="base_link" link2="link_1" reason="Adjacent"/>
     <disable_collisions link1="base_link" link2="link_2" reason="Never"/>
     <disable_collisions link1="base_link" link2="robot_stand" reason="Adjacent"/>
-    <disable_collisions link1="camera_mount" link2="crate" reason="Never"/>
-    <disable_collisions link1="camera_mount" link2="crate_foam" reason="Never"/>
-    <disable_collisions link1="camera_mount" link2="link_3" reason="Never"/>
-    <disable_collisions link1="camera_mount" link2="link_4" reason="Never"/>
     <disable_collisions link1="camera_mount" link2="link_5" reason="Adjacent"/>
     <disable_collisions link1="camera_mount" link2="link_6" reason="Never"/>
-    <disable_collisions link1="camera_mount" link2="robot_stand" reason="Never"/>
     <disable_collisions link1="camera_mount" link2="tool_gripper" reason="Default"/>
     <disable_collisions link1="crate" link2="crate_foam" reason="Adjacent"/>
     <disable_collisions link1="crate" link2="link_1" reason="Default"/>
-    <disable_collisions link1="crate" link2="link_4" reason="Never"/>
-    <disable_collisions link1="crate" link2="link_5" reason="Never"/>
-    <disable_collisions link1="crate" link2="link_6" reason="Never"/>
     <disable_collisions link1="crate" link2="robot_stand" reason="Adjacent"/>
-    <disable_collisions link1="crate" link2="tool_gripper" reason="Never"/>
     <disable_collisions link1="crate_foam" link2="link_1" reason="Never"/>
     <disable_collisions link1="crate_foam" link2="link_2" reason="Never"/>
     <disable_collisions link1="crate_foam" link2="link_4" reason="Never"/>
     <disable_collisions link1="crate_foam" link2="link_5" reason="Never"/>
     <disable_collisions link1="crate_foam" link2="link_6" reason="Never"/>
     <disable_collisions link1="crate_foam" link2="robot_stand" reason="Never"/>
-    <disable_collisions link1="crate_foam" link2="tool_gripper" reason="Never"/>
     <disable_collisions link1="link_1" link2="link_2" reason="Adjacent"/>
     <disable_collisions link1="link_1" link2="robot_stand" reason="Never"/>
     <disable_collisions link1="link_2" link2="link_3" reason="Adjacent"/>
@@ -79,11 +69,10 @@
     <disable_collisions link1="link_4" link2="link_5" reason="Adjacent"/>
     <disable_collisions link1="link_4" link2="robot_stand" reason="Never"/>
     <disable_collisions link1="link_5" link2="link_6" reason="Adjacent"/>
-    <disable_collisions link1="link_5" link2="robot_stand" reason="Never"/>
-    <disable_collisions link1="link_5" link2="tool_gripper" reason="Default"/>
     <disable_collisions link1="link_6" link2="robot_stand" reason="Never"/>
     <disable_collisions link1="link_6" link2="tool_gripper" reason="Adjacent"/>
-    <disable_collisions link1="robot_stand" link2="tool_gripper" reason="Never"/>
+
+    <disable_collisions link1="crate_foam" link2="tool_gripper" reason="Never"/>
 
 <!-- Used for debugging, do not uncomment outside of simulations! -->
     <disable_collisions link1="link_4" link2="camera_mount" reason="Never"/>
