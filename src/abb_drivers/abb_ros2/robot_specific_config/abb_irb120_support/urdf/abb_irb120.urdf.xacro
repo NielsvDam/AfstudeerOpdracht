@@ -684,7 +684,7 @@
   </joint>
 
   <joint name="tool_tcp-link_6_joint" type="fixed">
-    <origin xyz="0.095 0 0" rpy="0 0 0" />
+    <origin xyz="0.095 0 0" rpy="0 -1.57079633 0" /> <!-- Rotation fix has been applied here, 90degree turn on the Y axis () -->
     <parent link= "link_6" />
     <child link="tool_tcp" />
   </joint>

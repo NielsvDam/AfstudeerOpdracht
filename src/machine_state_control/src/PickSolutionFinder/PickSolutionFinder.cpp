@@ -13,10 +13,11 @@ namespace pick_solution_finder
     PickSolutionFinder::~PickSolutionFinder() {}
 
     PickSolutionFinder::PickSolutionFinder(
+        const rclcpp::Logger logger,
         const std::vector<custom_msgs::msg::LocatedObject>& detectedObjects,
         const std::vector<custom_msgs::msg::LocatedObject>& unknownAreas,
         const std::shared_ptr<moveit::planning_interface::MoveGroupInterface>& moveGroup)
-        : detectedObjects(detectedObjects), unknownAreas(unknownAreas), moveGroup(moveGroup)
+        : logger(logger), detectedObjects(detectedObjects), unknownAreas(unknownAreas), moveGroup(moveGroup)
     {}
 
     std::shared_ptr<PickSolution> PickSolutionFinder::findSolution()
@@ -31,11 +32,10 @@ namespace pick_solution_finder
             // test the poses for collisions
             for (const auto& pickPose : potentionalPickPoses)
             {
-                // Rotate the just generated pose to account for 90degree angle difference due to URDF definition.
-                auto rotatedPickPose = PickPoseUtils::rotatePose(pickPose,0.0,0.0,0.0); // <<! TODO:  Check which rotation is needed & crashes. >>
+                // auto rotatedPickPose = PickPoseUtils::rotatePose(pickPose,0.0,0.0,0.0); // <<! TODO:  Check which rotation is needed & crashes. >>
 
                 // Check if the pick pose causes a collision
-                if (!isPoseInCollision(rotatedPickPose))
+                if (!isPoseInCollision(pickPose))
                 {
                     // Try to find a retract pose that does not cause a collision
                     for (bool relative : {true, false})
@@ -43,14 +43,22 @@ namespace pick_solution_finder
                         // Get a retract pose (relative or absolute)
                         const static double retractDistance = 0.03;
                         geometry_msgs::msg::Pose retractPose =
-                            PickPoseUtils::calculateRetractPose(rotatedPickPose, retractDistance, relative);
+                            PickPoseUtils::calculateRetractPose(pickPose, retractDistance, relative);
                         // Check if the retract pose causes a collision
                         if (!isPoseInCollision(retractPose))
                         {
                             // The solution is found.
-                            return std::make_shared<PickSolution>(rotatedPickPose, retractPose); // Changed all pickPose to rotatedPickPose since declaration at currently line 35.
+                            return std::make_shared<PickSolution>(pickPose, retractPose);
+                        } else {
+                            // No solution found on last step.
+                            // Program never arrived here during test 14.
                         }
                     }
+                } else {
+                    // This pose is in collision.
+                    // Program did arrive here during test 13.
+                    // All generated test poses fail this test.
+                    RCLCPP_INFO(logger,"Pose failed collision/IK check.");
                 }
             }
         }
@@ -67,12 +75,14 @@ namespace pick_solution_finder
         // set the robot state to have the TCP at the given pose
         const moveit::core::JointModelGroup* jointModelGroup = robotModel->getJointModelGroup(moveGroup->getName());
         bool ikSuccess = robotState.setFromIK(jointModelGroup, pose, "tool_tcp"); // HARDCODED : TODO
-
+ 
         // Check valid IK solution (if the state is actually possible)
         if (!ikSuccess)
         {
             // Could not find a valid IK solution, the robot can't reach the pose
-            return true;
+            RCLCPP_INFO(logger,"IK failed for current pose.");
+            // As a debug, ignore the failed IK anyway (commented out return true.)
+            // return true;
         }
 
         // Create a collision request and result
@@ -125,8 +135,9 @@ namespace pick_solution_finder
             {"tool_gripper", "crate"},
             {"link_5", "crate"}, // rv5as_wrist to link_5
             {"camera_mount", "crate"}, 
-            {"link_5", "robot_stand"},   // The following have changed: "robot_stand" < "rv5as_table_base"; "camera_mount" < "rv5as_camera"; "tool_gripper" < "rv5as_schrunk_assista"
-            {"camera_mount", "robot_stand"}}; // HARDCODED : Might need a fix, currently manually changed.
+            {"camera_mount", "robot_stand"},   // The following have changed: "robot_stand" < "rv5as_table_base"; "camera_mount" < "rv5as_camera"; "tool_gripper" < "rv5as_schrunk_assista"
+            {"link_5", "robot_stand"} // HARDCODED : Might need a fix, currently manually changed.
+        };
 
         // Check if the contact pair is in the list of problematic contacts
         for (const auto& contact : problematicContacts)

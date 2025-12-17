@@ -1,6 +1,6 @@
 . install/setup.sh
-export LC_NUMERIC=en_US.UTF-8 # see https://github.com/frankaemika/franka_ros2/issues/58
-export QT_QPA_PLATFORM=xcb # Fix a Qt issue after some updates on Ubuntu.
+export QT_QPA_PLATFORM=xcb && echo "[INFO] QT platform set to xcb to prevent crashes on Wayland." # Due to software updates and them being incompatable with wayland, any Qt rendered GUI's will crash if this setting is not applied to the terminal.
+export LC_NUMERIC=en_US.UTF-8 && echo "[INFO] LC_NUMERIC is set to UTF-8. to precent possible ROS2 issue." # Taken from launch_app & lauch_drivers, https://github.com/frankaemika/franka_ros2/issues/58
 
 if [ $1 = "debug" ];
 then

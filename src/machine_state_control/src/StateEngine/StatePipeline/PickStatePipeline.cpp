@@ -55,7 +55,7 @@ namespace state_pipeline
             {
                 geometry_msgs::msg::Pose pose = pickSolution->getAboveCratePose();
                 auto trajectory = createTrajectory(pose, "tool_tcp", "PTP"); // HARDCODED : TODO
-                RCLCPP_INFO(logger,"Abovecratepose reached.");
+                RCLCPP_INFO(logger,"Move to aboveCratePose.");
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
                     getGoalJointTolerance(),
@@ -65,7 +65,7 @@ namespace state_pipeline
             {
                 geometry_msgs::msg::Pose pose = pickSolution->getRetractPose();
                 auto trajectory = createTrajectory(pose, "tool_tcp", "PTP"); // HARDCODED : TODO
-                RCLCPP_INFO(logger,"Retractpose reached.");
+                RCLCPP_INFO(logger,"Move to retractpose.");
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
                     getGoalJointTolerance(),
@@ -75,7 +75,7 @@ namespace state_pipeline
             {
                 geometry_msgs::msg::Pose pose = pickSolution->getPickPose();
                 auto trajectory = createTrajectory(pose, "tool_tcp", "LIN", 0.08); // HARDCODED : TODO
-                RCLCPP_INFO(logger,"Retractpose reached.");
+                RCLCPP_INFO(logger,"Move to pickpose.");
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
                     getGoalJointTolerance(),
@@ -94,6 +94,7 @@ namespace state_pipeline
                 geometry_msgs::msg::Pose pose = pickSolution->getRetractPose();
                 auto trajectory = createTrajectory(pose, "tool_tcp", "LIN", 0.08); // HARDCODED : TODO
                 markCompleted();
+                RCLCPP_INFO(logger, "Move to retractionpose."); // DEBUG prints.
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
                     getGoalJointTolerance(),

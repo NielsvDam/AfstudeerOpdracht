@@ -39,16 +39,8 @@ namespace state_pipeline
         cameraPose = moveGroup->getCurrentPose(crateBottomFrame);
         // adjust the picture pose
         cameraPose.pose.position.z += pictureDistance;
-        // rotate the picture pose to correct for any strange rotations
-        // TODO: Get these orientations/calculate them from the URDF file, in order to prevent hardcoding them.
-        // So essentially: Replace this with a function to get and transform the rotations from rpy out of the file to quaternion, preferably through external file config.
-        // Rotational fix.
-        #define RAD_45 0.707107
-        cameraPose.pose.orientation.w = RAD_45;
-        cameraPose.pose.orientation.y = RAD_45;
-        cameraPose.pose.orientation.x = 0.0;
-        cameraPose.pose.orientation.z = 0.0;
-        // Positional fix.
+
+        // Positional fix: TODO:  Replace by calculated offsets
         cameraPose.pose.position.x -= 0.37 - 0.31;
         cameraPose.pose.position.y -= -0.0175 - 0;
         cameraPose.pose.position.z -= 0.364 - 0.322;
@@ -131,6 +123,7 @@ namespace state_pipeline
                 {
                     auto trajectory = createTrajectory(cameraPose, "tool_tcp", "PTP"); // HARDCODED: TODO, was rv5as_link_6 :: It appears to not be fixed by setting the link_6 to the new one, as this seems to utterly ruin the path planner.
                     // return the direct movement instruction
+                    RCLCPP_INFO(logger, "Moving directly to PicturePose."); // DEBUG prints.
                     return std::make_shared<instruction::MovementInstruction>(
                         trajectory,
                         getGoalJointTolerance(),
@@ -141,9 +134,9 @@ namespace state_pipeline
                 {
                     RCLCPP_INFO(logger, "Failed to create trajectory directly to PicturePose, trying a indirect strategy");
                     indirectStrategy = true; // set the indirect strategy flag
-                    geometry_msgs::msg::Pose prevPose = getStartPose("link_6");  // HARDCODED : TODO : was link_6
+                    geometry_msgs::msg::Pose prevPose = getStartPose("tool_tcp");  // HARDCODED : TODO : was link_6
                     prevPose.position.z = 0.0; // set the z position to 0 (which is above the crate)
-                    auto trajectory = createTrajectory(prevPose, "link_6", "LIN");  // HARDCODED : TODO
+                    auto trajectory = createTrajectory(prevPose, "tool_tcp", "LIN");  // HARDCODED : TODO
                     // return the indirect movement instruction
                     return std::make_shared<instruction::MovementInstruction>(
                         trajectory,
@@ -155,7 +148,8 @@ namespace state_pipeline
             {
                 if (indirectStrategy)
                 {
-                    auto trajectory = createTrajectory(cameraPose, "link_6", "PTP"); // HARDCODED : TODO, see line 66 or near.
+                    auto trajectory = createTrajectory(cameraPose, "tool_tcp", "PTP"); // HARDCODED : TODO, see line 66 or near.
+                    RCLCPP_INFO(logger, "Moving directly to PicturePose after indirect."); // DEBUG prints.
                     return std::make_shared<instruction::MovementInstruction>(
                         trajectory,
                         getGoalJointTolerance(),
@@ -166,6 +160,7 @@ namespace state_pipeline
             case 2: // take picture
             {
                 markCompleted();
+                RCLCPP_INFO(logger, "Taking picture."); // DEBUG prints.
                 return std::make_shared<instruction::PictureInstruction>("take picture");
             }
             default:

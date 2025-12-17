@@ -47,6 +47,10 @@ void MatrixSegment<T>::detectBlocks()
         // Advice: Test erode filter on contours, since schrinking the contours results in very usable information about
         // multiple blocks in a cluster.
         // This idea has been found by experimenting with offset lines in Fusion360 (see /docs/schrink.gif)
+
+        // Erode > Seperate/Identify individual objects > Dilate.
+        // In (very) short terms: To seperate individual objects, be it for detecting close objects or stacked/piled, segmentation algorithms are used. Something like a watershed algorithm tends to work.
+
         return;
     }
 
@@ -63,7 +67,7 @@ void MatrixSegment<T>::detectBlocks()
     float rowPoint = rectCenter.x + rowOrigin;
     float colPoint = rectCenter.y + colOrigin;
     geometry_msgs::msg::Pose pose =
-        Conversion::matrixPointToPose(rowPoint, colPoint, avgHeight, 0.0, 0.0, angle * M_PI / 180.0);
+        Conversion::matrixPointToPose(rowPoint, colPoint, avgHeight, 0.0, 180.0 * M_PI / 180.0, angle * M_PI / 180.0);
 
     // Convert the angle to a quaternion
     poses.push_back(pose);

@@ -5,6 +5,8 @@
 #include <geometry_msgs/msg/pose.hpp>                         // geometry_msgs::msg::Pose
 #include <moveit/planning_scene/planning_scene.h>             // planning_scene::PlanningScene
 
+#include <rclcpp/rclcpp.hpp>                                  // rclcpp::Logger for debugging
+
 #include <custom_msgs/msg/located_object.hpp>  // custom_msgs::msg::LocatedObject
 #include "PickSolutionFinder/PickSolution.hpp" // pick_solution_finder::PickSolution
 
@@ -44,12 +46,13 @@ namespace pick_solution_finder
          * @param moveGroup The move group, necessary to retrieve information about the robot and environment.
          */
         PickSolutionFinder(
+            const rclcpp::Logger logger,
             const std::vector<custom_msgs::msg::LocatedObject>& detectedObjects,
             const std::vector<custom_msgs::msg::LocatedObject>& unknownAreas,
             const std::shared_ptr<moveit::planning_interface::MoveGroupInterface>& moveGroup);
         /**
          * @brief Find a pick solution for any of the located objects.
-         *
+         * 
          * @return A shared pointer to the pick solution.
          */
         std::shared_ptr<PickSolution> findSolution();
@@ -74,6 +77,7 @@ namespace pick_solution_finder
          */
         static bool isProblematicContact(const std::string& first, const std::string& second);
 
+        rclcpp::Logger logger; /* The logger  */
         std::vector<custom_msgs::msg::LocatedObject> detectedObjects;              /* The detected objects. */
         std::vector<custom_msgs::msg::LocatedObject> unknownAreas;                 /* The unkown areas. */
         std::shared_ptr<moveit::planning_interface::MoveGroupInterface> moveGroup; /* The move group (to retrieve necessary

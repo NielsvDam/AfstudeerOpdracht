@@ -10,8 +10,8 @@
 #include "MatrixFilters.hpp"
 #include "Conversion.hpp"
 
-#define DELAYED
-// Additions to allow for temporary delay to be added.
+// #define DELAYED
+// Additions to allow for temporary delay to be added. Not needed when simulating or when running with static camera.
 #ifdef DELAYED
 
 #define START_DELAY 500
