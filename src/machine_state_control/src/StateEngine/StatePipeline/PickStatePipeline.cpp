@@ -74,7 +74,7 @@ namespace state_pipeline
             case 3: // move to pick pose.
             {
                 geometry_msgs::msg::Pose pose = pickSolution->getPickPose();
-                auto trajectory = createTrajectory(pose, "tool_tcp", "LIN", 0.08); // HARDCODED : TODO
+                auto trajectory = createTrajectory(pose, "tool_tcp", "LIN", NEAR_OBJECT_VELOCITY_SCALING); // HARDCODED : TODO
                 RCLCPP_INFO(logger,"Move to pickpose.");
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
@@ -92,7 +92,7 @@ namespace state_pipeline
             case 6: // move to retract pose.
             {
                 geometry_msgs::msg::Pose pose = pickSolution->getRetractPose();
-                auto trajectory = createTrajectory(pose, "tool_tcp", "LIN", 0.08); // HARDCODED : TODO
+                auto trajectory = createTrajectory(pose, "tool_tcp", "LIN", NEAR_OBJECT_VELOCITY_SCALING); // HARDCODED : TODO
                 markCompleted();
                 RCLCPP_INFO(logger, "Move to retractionpose."); // DEBUG prints.
                 return std::make_shared<instruction::MovementInstruction>(

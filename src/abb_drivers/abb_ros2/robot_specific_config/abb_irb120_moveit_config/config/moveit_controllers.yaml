@@ -3,15 +3,15 @@
 trajectory_execution:
   allowed_execution_duration_scaling: 1.2
   allowed_goal_duration_margin: 0.5
-  allowed_start_tolerance: 0.05
+  allowed_start_tolerance: 0.15 # Increased to resolve Pick/Place positional errors, originating from responses occuring faster than expected.
   trajectory_duration_monitoring: true
 moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
 
 moveit_simple_controller_manager:
   controller_names:
-    - joint_trajectory_controller
+    - moveit_trajectory_controller # Was "joint_trajectory_controller"
 
-  joint_trajectory_controller:
+  moveit_trajectory_controller:
     type: FollowJointTrajectory
     joints:
       - joint_1

@@ -27,12 +27,13 @@ namespace instruction
         auto goal_msg = custom_msgs::action::ExecuteTrajectory::Goal();
         goal_msg.trajectory = trajectory.joint_trajectory;
         goal_msg.joint_tollerance = goalJointTolerance;
+        goal_msg.description = this->getDescription();
 
         // Create SendGoalOptions object
         auto options = rclcpp_action::Client<custom_msgs::action::ExecuteTrajectory>::SendGoalOptions();
         options.result_callback = std::bind(&MovementInstruction::resultCallback, this, std::placeholders::_1);
 
-        RCLCPP_INFO(logger, "Sending trajectory with %zu points", goal_msg.trajectory.points.size());
+        RCLCPP_INFO(logger, "Sending trajectory with %zu points and description %s", goal_msg.trajectory.points.size(), goal_msg.description.c_str());
 
         // Send goal asynchronously with the options
         action_client->async_send_goal(goal_msg, options);
@@ -71,14 +72,14 @@ namespace instruction
     {
         if (result.code == rclcpp_action::ResultCode::SUCCEEDED)
         {
-            RCLCPP_INFO(logger, "Trajectory executed successfully!");
+            RCLCPP_INFO(logger, "Trajectory (%s) executed successfully!",this->getDescription().c_str());
             std::unique_lock<std::mutex> lock(executeTrajectoryMtx);
             executeTrajectoryDone = true;
             executeTrajectoryCv.notify_one();
         }
         else
         {
-            RCLCPP_ERROR(logger, "Trajectory execution failed with code: %d", static_cast<int>(result.code));
+            RCLCPP_ERROR(logger, "Trajectory execution (%s) failed with code: %d", this->getDescription().c_str(), static_cast<int>(result.code));
             throw std::runtime_error("Trajectory execution failed");
         }
     }

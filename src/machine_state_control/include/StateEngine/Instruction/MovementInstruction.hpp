@@ -73,6 +73,8 @@ namespace instruction
         std::condition_variable executeTrajectoryCv;  /* A condition variable to wait for the trajectory execution to
                                                          finish. */
         inline static const std::string LOGGER_NAME = "MovementInstruction"; /* The name of the logger. */
+
+        // const std::string& description; /* Private replication of the description, this way it can be easily accessed from within the movementinstruction itself. */
     };
 } // namespace instruction
 

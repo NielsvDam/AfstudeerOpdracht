@@ -21,7 +21,8 @@ namespace state_pipeline
               startJointValues,
               moveGroup,
               std::make_shared<state::PlaceState>(startJointValues)),
-          pickOrientation(pickOrientation)
+          pickOrientation(pickOrientation),
+          moveGroup(moveGroup)
     {
         RCLCPP_INFO(logger, "PlaceStatePipeline created.");
     }
@@ -30,28 +31,63 @@ namespace state_pipeline
     {
         switch (instructionNumber)
         {
-            case 0: // move to PlacePose
+            case 0: // move to PrePlacePose
             {
                 placePose = getNextPlacePose();
+                auto prePlacePose = placePose;
+                prePlacePose.position.z += 0.2;
+                RCLCPP_INFO(logger, "Creating trajectory to pre-place position, printing position in next info message.");
+
+                RCLCPP_INFO(logger, "Pre-place pose set to x: %f, y: %f, z: %f. rotation: %f, %f, %f, %f.",
+                prePlacePose.position.x,
+                prePlacePose.position.y,
+                prePlacePose.position.z,
+                prePlacePose.orientation.x,
+                prePlacePose.orientation.y,
+                prePlacePose.orientation.z,
+                prePlacePose.orientation.w);
+
+                // Send preplacepose instruction over.
+                auto trajectory = createTrajectory(prePlacePose, "tool_tcp", "LIN"); // HARDCODED : TODO
+                return std::make_shared<instruction::MovementInstruction>(
+                    trajectory,
+                    getGoalJointTolerance(),
+                    "move to prePlacePose");
+            }
+            case 1: // move to PlacePose
+            {
+                placePose = getNextPlacePose();
+                RCLCPP_INFO(logger, "Creating trajectory to place position, printing position in next info message.");
+
+                RCLCPP_INFO(logger, "Place pose set to x: %f, y: %f, z: %f. rotation: %f, %f, %f, %f.",
+                placePose.position.x,
+                placePose.position.y,
+                placePose.position.z,
+                placePose.orientation.x,
+                placePose.orientation.y,
+                placePose.orientation.z,
+                placePose.orientation.w);
+
+                // Normal placepose instruction.
                 auto trajectory = createTrajectory(placePose, "tool_tcp", "LIN"); // HARDCODED : TODO
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
                     getGoalJointTolerance(),
                     "move to PlacePose");
             }
-            case 1: // open gripper
+            case 2: // open gripper
             {
                 return std::make_shared<instruction::GripperInstruction>(false, "open gripper");
             }
-            case 2: // wait for gripper to close
+            case 3: // wait for gripper to close
             {
                 return std::make_shared<instruction::SleepInstruction>(125, "wait for gripper to open");
             }
-            case 3: // move to retract pose
+            case 4: // move to retract pose
             {
-                placePose.position.y += 0.0185; // move back just a bit, to avoid collision with the block
-                placePose.position.z += 0.02;   // move up a bit.
-                auto trajectory = createTrajectory(placePose, "tool_tcp", "LIN", 0.08); // HARDCODED : TODO
+                // placePose.position.y += 0.0185; // Due to new gripper shape, moving back might/will cause collisions to occur with the object. Normally this line prevents collision on a parallel gripper. 
+                placePose.position.z += 0.2;   // move up a bit. // Move up a bit more (0.02 -> 0.2) so I don't have to make "Post-post place pose", temporary fix to weird plan execution.
+                auto trajectory = createTrajectory(placePose, "tool_tcp", "LIN", NEAR_OBJECT_VELOCITY_SCALING); // HARDCODED : TODO
                 markCompleted();
                 return std::make_shared<instruction::MovementInstruction>(
                     trajectory,
@@ -79,21 +115,30 @@ namespace state_pipeline
             pitch -= RAD_90DEG;
         }
 
-        static const double Z_START = -0.02 + 0.012;
-        static const double MIN_X = -0.25;
-        static const double MAX_X = 0.25;
-        static const double MIN_Y = 0.25;
-        static const double MAX_Y = 0.33;
-        static const double BLOCK_LENGTH = 0.0185;
-        static const double Z_STACK_CLEARANCE = 0.003; // 3mm clearance to avoid collision with the block on top
-        static const double X_STEP = 0.10;                 // 5cm
-        static const double Y_STEP = BLOCK_LENGTH + 0.002; // + 2mm to avoid collision with other block
-        static const double MAX_Z = Z_START + (BLOCK_LENGTH * 2) + Z_STACK_CLEARANCE; // 2 blocks high + clearance
+        // std::shared_ptr<moveit::planning_interface::MoveGroupInterface>& moveGroup;
 
-        static double curX = MIN_X;
-        static double curY = MIN_Y;
-        static double curZ = Z_START;
-        static bool finished = false;
+        std::string place_link = MachineStateControlNode::getInstance()->get_parameter("place_center_link").as_string();
+        geometry_msgs::msg::PoseStamped place_center = moveGroup->getCurrentPose(place_link);
+        // Make configurable
+        const double range_x = 0.02;
+        const double range_y = 0.02;
+
+        const double Z_START = place_center.pose.position.z; // Non-const to allow usage in other non-const?
+        const double MIN_X = place_center.pose.position.x - (range_x/2);
+        const double MAX_X = place_center.pose.position.x + (range_x/2);
+
+        const double MIN_Y = place_center.pose.position.y - (range_y/2);
+        const double MAX_Y = place_center.pose.position.y + (range_y/2);
+
+        const double BLOCK_LENGTH = 0.0185;
+        const double Z_STACK_CLEARANCE = 0.003; // 3mm clearance to avoid collision with the block on top
+        const double X_STEP = 0.10;                 // 5cm
+        const double Y_STEP = BLOCK_LENGTH + 0.002; // + 2mm to avoid collision with other block
+        const double MAX_Z = Z_START + (BLOCK_LENGTH * 2) + Z_STACK_CLEARANCE; // 2 blocks high + clearance
+        double curX = MIN_X;
+        double curY = MIN_Y;
+        double curZ = Z_START + (BLOCK_LENGTH/2); // Additional height offset of /2 cube height to make sure collisions don't occur with the robot stand.
+        bool finished = false;
 
         geometry_msgs::msg::Pose placePose;
         placePose.position.x = curX;
@@ -101,7 +146,7 @@ namespace state_pipeline
         placePose.position.z = curZ + MachineStateControlNode::getInstance()->get_parameter("place_z_offset").as_double();
 
         tf2::Quaternion quaternion;
-        quaternion.setRPY(RAD_180DEG, pitch, -RAD_90DEG);
+        quaternion.setRPY(0.0, pitch, -RAD_90DEG);
         placePose.orientation = tf2::toMsg(quaternion);
 
         if (finished)

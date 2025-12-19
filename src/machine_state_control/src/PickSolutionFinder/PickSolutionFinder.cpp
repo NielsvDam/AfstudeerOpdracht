@@ -81,8 +81,8 @@ namespace pick_solution_finder
         {
             // Could not find a valid IK solution, the robot can't reach the pose
             RCLCPP_INFO(logger,"IK failed for current pose.");
-            // As a debug, ignore the failed IK anyway (commented out return true.)
-            // return true;
+            
+            return true;
         }
 
         // Create a collision request and result

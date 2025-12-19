@@ -121,6 +121,8 @@ namespace state_pipeline
         if (auto movementInstruction = std::dynamic_pointer_cast<instruction::MovementInstruction>(instruction))
         {
             auto trajectory = movementInstruction->getTrajectory();
+            auto trajectoryName = movementInstruction->getDescription();
+            RCLCPP_INFO(logger, "Publishing trajectory : %s", trajectoryName.c_str());
             publishTrajectoryPath(trajectory);
         }
 
@@ -224,4 +226,5 @@ namespace state_pipeline
     {
         completed = true;
     }
+
 } // namespace state_pipeline

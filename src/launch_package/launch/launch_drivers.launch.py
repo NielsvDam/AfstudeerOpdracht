@@ -70,8 +70,8 @@ def generate_launch_description():
     )
 
     launches = [
-        abb_driver_launch, # <<! Change name, looks better. >>
-        abb_movit_launch, # <<! Change name, looks better. >>
+        abb_driver_launch,
+        abb_movit_launch,
         standalone_trajectory_executor_launch
     ] 
 

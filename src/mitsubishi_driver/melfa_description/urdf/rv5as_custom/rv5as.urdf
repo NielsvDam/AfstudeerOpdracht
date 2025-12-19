@@ -326,4 +326,12 @@
     </link>
     <!-- Add the crate inner bottom center link -->
     <link name="crate_inner_bottom_center" />
+
+    <link name="Test_Position_Place" />
+    <joint name="joink" type="fixed">
+        <parent link="world"/>
+        <child link="Test_Position_Place"/>
+        <origin rpy="0 0 0" xyz="-0.25 0.25 -0.008"/>
+    </joint>
+
 </robot>

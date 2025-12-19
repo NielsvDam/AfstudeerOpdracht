@@ -5,10 +5,6 @@
 #include "StateEngine/Instruction/PictureInstruction.hpp"  // instruction::PictureInstruction
 #include "MachineStateControlNode.hpp"
 
-// For the transform logic.
-#include "tf2_ros/transform_listener.h"
-#include "tf2_ros/buffer.h"
-
 // DEBUG
 
 namespace state_pipeline

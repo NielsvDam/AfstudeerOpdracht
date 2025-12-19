@@ -98,7 +98,7 @@ CallbackReturn ABBSystemHardware::on_init(const hardware_interface::HardwareInfo
 
     // Get robot controller description from RWS
     abb::robot::RWSManager rws_manager(rws_ip, rws_port, "Default User", "robotics");
-    robot_controller_description_ = abb::robot::utilities::establishRWSConnection(rws_manager, "IRB1200", true);
+    robot_controller_description_ = abb::robot::utilities::establishRWSConnection(rws_manager, "IRB120", true); // HARDCODED : TODO if possible.
   }
   else
   {

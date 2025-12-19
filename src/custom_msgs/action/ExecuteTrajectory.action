@@ -3,6 +3,7 @@
 # Goal
 trajectory_msgs/JointTrajectory trajectory
 float64 joint_tollerance
+string description
 
 ---
 # Result

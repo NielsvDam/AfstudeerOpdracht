@@ -7,6 +7,9 @@ Panels:
         - /RobotModel1
         - /PointCloud21
         - /MarkerArray1
+        - /Path1
+        - /MarkerArray2
+        - /MarkerArray2/Status1
       Splitter Ratio: 0.5
     Tree Height: 400
   - Class: rviz_common/Help
@@ -91,6 +94,10 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        example:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         flange:
           Alpha: 1
           Show Axes: false
@@ -125,6 +132,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        place_center:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         robot_stand:
           Alpha: 1
           Show Axes: false
@@ -158,8 +169,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 0.09891079366207123
-        Min Value: 0.047272056341171265
+        Max Value: 0.08883249759674072
+        Min Value: 0.05289739370346069
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -193,7 +204,7 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        {}
+        object_detection: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -202,7 +213,7 @@ Visualization Manager:
         Value: /object_detect/markers
       Value: true
     - Alpha: 1
-      Buffer Length: 1
+      Buffer Length: 5
       Class: rviz_default_plugins/Path
       Color: 25; 255; 0
       Enabled: true
@@ -229,6 +240,20 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /path
       Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: MarkerArray
+      Namespaces:
+        crate=camera_mount: true
+        crate=link_5: true
+        crate=tool_gripper: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /display_contacts
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -247,25 +272,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 1.7169893980026245
+      Distance: 2.003110885620117
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.23745404183864594
-        Y: 0.010620955377817154
-        Z: 0.05554088205099106
+        X: 0.20803993940353394
+        Y: -0.018246479332447052
+        Z: 0.12096445262432098
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.45000019669532776
+      Pitch: 0.3950002193450928
       Target Frame: world
       Value: Orbit (rviz_default_plugins)
-      Yaw: 6.040177345275879
+      Yaw: 5.670178413391113
     Saved:
       - Class: rviz_default_plugins/Orbit
         Distance: 2

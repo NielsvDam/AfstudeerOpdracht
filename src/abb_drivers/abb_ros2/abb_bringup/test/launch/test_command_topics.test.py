@@ -27,10 +27,10 @@ def generate_test_description():
                 ]
             ),
             launch_arguments={
-                "description_package": "abb_irb1200_support",
-                "description_file": "irb1200_5_90.xacro",
+                "description_package": "abb_irb120_support",
+                "description_file": "irb120.urdf.xacro",
                 "launch_rviz": "false",
-                "moveit_config_package": " abb_irb1200_5_90_moveit_config",
+                "moveit_config_package": " abb_irb120_moveit_config",
                 "use_fake_hardware": "true",
             }.items(),
         ),
@@ -40,7 +40,7 @@ def generate_test_description():
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
             PathJoinSubstitution(
-                [FindPackageShare("abb_irb1200_support"), "urdf", "irb1200_5_90.xacro"]
+                [FindPackageShare("abb_irb120_support"), "urdf", "irb120.urdf.xacro"]
             ),
             " ",
             "use_fake_hardware:=",

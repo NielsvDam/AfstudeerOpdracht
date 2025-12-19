@@ -1,6 +1,10 @@
 #ifndef PICKSTATEPIPELINE_HPP
 #define PICKSTATEPIPELINE_HPP
 
+#define NEAR_OBJECT_VELOCITY_SCALING 0.05 // The velocity scaling for any movements near/directly with the objects. Raising this whilst using a robot (instead of a cobot) is seriously ill-advised.
+#define FAR_VELOCITY_SCALING 0.1 // The velocity scaling when moving from the picture pose to the above crate pos for the object.
+// Scaling also defined in PlaceStatePipeline.hpp, not shared between files yet.
+
 #include "AbstractStatePipeline.hpp"           // state_pipeline::AbstractStatePipeline
 #include "StateEngine/State/PickState.hpp"     // state::PickState
 #include "PickSolutionFinder/PickSolution.hpp" // pick_solution_finder::PickSolution

@@ -15,6 +15,10 @@ namespace instruction
 
     void GripperInstruction::execute()
     {
+        // Alter this to reflect the new gripper system.
+        // Simply put: Replace request into open/close function to send out service calls.
+        // Beforehand: Check if this should be done here, or if it should be handled like the Mitsubishi IO, with a client from the MachineStateControl Node.
+
         const uint16_t GRIPPER_OPEN = 0b10;
         const uint16_t GRIPPER_CLOSE = 0b01;
 

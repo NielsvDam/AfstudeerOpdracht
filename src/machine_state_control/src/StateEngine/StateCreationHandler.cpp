@@ -43,7 +43,7 @@ namespace state_engine
         moveGroup = std::make_shared<moveit::planning_interface::MoveGroupInterface>(controlNode, planningGroup);
         moveGroup->setMaxAccelerationScalingFactor(acceleration);
         moveGroup->setGoalPositionTolerance(0.001);
-        moveGroup->setGoalJointTolerance(0.005);
+        moveGroup->setGoalJointTolerance(0.015); // Changed from 0.005 to fix issue with Pick position planning.
         moveGroup->setPlanningTime(4.0);
         moveGroup->setNumPlanningAttempts(20);
         moveGroup->startStateMonitor();

@@ -25,6 +25,10 @@ TrajectoryExecutorNode::TrajectoryExecutorNode()
       // Create the publisher of the trajectory
       trajectoryToControllerPublisher(
           this->create_publisher<trajectory_msgs::msg::JointTrajectory>(get_parameter("controller").as_string(), 10)) // <<! The current controller might be wrong in exec params, check this. >>
+      #ifdef PUBLISH_CURRENT
+        , currentPathPublisher(this->create_publisher<moveit_msgs::msg::DisplayTrajectory>("/display_planned_path",10)) // Publisher for the current trajectory. Gets removed if PUBLISH_CURRENT isn't defined in the .hpp file.
+      #endif
+      
 {
     RCLCPP_INFO(get_logger(), "Stand-alone trajectory executor initialized.");
 }
@@ -65,6 +69,12 @@ rclcpp_action::GoalResponse TrajectoryExecutorNode::handleActionGoal(
     if (!JointVectorUtils::equals(startPositionVector, currentPositionVector, epsilon))
     {
         RCLCPP_ERROR(this->get_logger(), "Start state does not match current state. Rejecting goal.");
+        // For debugging: Print both positions.
+        for (size_t i = 0; i < startPositionVector.size(); i++) {
+            RCLCPP_INFO(this->get_logger(), "%f compared to %f", startPositionVector[i], currentPositionVector[i]);
+        }
+        RCLCPP_INFO(this->get_logger(), "Epsilon value/tolerance: %f", epsilon);
+
         return rclcpp_action::GoalResponse::REJECT;
     }
     return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
@@ -93,13 +103,35 @@ void TrajectoryExecutorNode::executeAction(
     // NOLINTNEXTLINE (performance-unnecessary-value-param) // can't change definition in ros sourcecode
     const std::shared_ptr<rclcpp_action::ServerGoalHandle<custom_msgs::action::ExecuteTrajectory>> goal_handle)
 {
-    RCLCPP_INFO(this->get_logger(), "Executing trajectory...");
-    // Create result message
+    // Send the currently executing path to Rviz (as trajectory) to review and debug.
+    #ifdef PUBLISH_CURRENT // Only define this variable if this is enabled, see .hpp file.
+    moveit_msgs::msg::DisplayTrajectory display = moveit_msgs::msg::DisplayTrajectory();
+    #endif
+
+    RCLCPP_INFO(this->get_logger(), "Executing trajectory: %s", goal_handle->get_goal()->description.c_str());
+    // Create result message 
     custom_msgs::action::ExecuteTrajectory::Result::SharedPtr result =
         std::make_shared<custom_msgs::action::ExecuteTrajectory::Result>();
     // Get trajectory and tolerance
     trajectory_msgs::msg::JointTrajectory trajectory = goal_handle->get_goal()->trajectory;
     double epsilon = goal_handle->get_goal()->joint_tollerance;
+
+    #ifdef PUBLISH_CURRENT // Only publish current trajectory if the define for this is set in the .hpp file.
+    moveit_msgs::msg::RobotTrajectory robotTrajectory; // Turns out this is needed, and not inherently a part of the msg.
+    robotTrajectory.joint_trajectory = goal_handle->get_goal()->trajectory;
+    display.trajectory.push_back(robotTrajectory);
+
+    // In order to display it properly, it needs a start-state aswell, so:
+    moveit_msgs::msg::RobotState robotStart;
+    robotStart.joint_state.name = goal_handle->get_goal()->trajectory.joint_names;
+    robotStart.joint_state.position = goal_handle->get_goal()->trajectory.points.front().positions;
+    robotStart.joint_state.header.stamp = this->now(); // Extra for logging purposes: Adding a header onto it so MoveIt doesn't misbehave.
+    display.trajectory_start = robotStart;
+
+    RCLCPP_INFO(this->get_logger(),"Published current trajectory to '/display_planned_path'");
+    currentPathPublisher->publish(display);
+    #endif
+
     // Publish trajectory
     trajectoryToControllerPublisher->publish(trajectory);
     // Wait for final joint state to match
@@ -124,7 +156,7 @@ void TrajectoryExecutorNode::executeAction(
     // Publish result
     result->success = true;
     goal_handle->succeed(result);
-    RCLCPP_INFO(this->get_logger(), "Trajectory execution completed.");
+    RCLCPP_INFO(this->get_logger(), "Trajectory execution (%s) completed.", goal_handle->get_goal()->description.c_str());
 }
 
 // NOLINTNEXTLINE (performance-unnecessary-value-param) // can't change definition in ros sourcecode

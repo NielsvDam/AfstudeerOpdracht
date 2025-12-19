@@ -75,7 +75,7 @@
     <disable_collisions link1="crate_foam" link2="tool_gripper" reason="Never"/>
 
 <!-- Used for debugging, do not uncomment outside of simulations! -->
-    <disable_collisions link1="link_4" link2="camera_mount" reason="Never"/>
+    <!-- <disable_collisions link1="link_4" link2="camera_mount" reason="Never"/>
     <disable_collisions link1="crate_foam" link2="tool_gripper" reason="Never"/>
     <disable_collisions link1="tool_gripper" link2="robot_stand" reason="Never"/>
     <disable_collisions link1="link_5" link2="robot_stand" reason="Never"/>
@@ -94,7 +94,7 @@
     <disable_collisions link1="robot_stand" link2="crate_foam" reason="Never"/>
     <disable_collisions link1="link_4" link2="crate" reason="Never"/>
     <disable_collisions link1="link_4" link2="crate_foam" reason="Never"/>
-    <disable_collisions link1="link_4" link2="link_6" reason="Never"/>
+    <disable_collisions link1="link_4" link2="link_6" reason="Never"/> -->
 <!-- End of debugging collisions section. -->
 
 </robot>
