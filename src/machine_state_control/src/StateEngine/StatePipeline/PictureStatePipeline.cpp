@@ -130,7 +130,7 @@ namespace state_pipeline
                 {
                     RCLCPP_INFO(logger, "Failed to create trajectory directly to PicturePose, trying a indirect strategy");
                     indirectStrategy = true; // set the indirect strategy flag
-                    geometry_msgs::msg::Pose prevPose = getStartPose("tool_tcp");  // HARDCODED : TODO : was link_6
+                    geometry_msgs::msg::Pose prevPose = getStartPose("tool_tcp");  // HARDCODED : TODO
                     prevPose.position.z = 0.0; // set the z position to 0 (which is above the crate)
                     auto trajectory = createTrajectory(prevPose, "tool_tcp", "LIN");  // HARDCODED : TODO
                     // return the indirect movement instruction

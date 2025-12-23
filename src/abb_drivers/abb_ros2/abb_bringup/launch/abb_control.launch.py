@@ -220,11 +220,11 @@ def generate_launch_description():
     )
 
     nodes_to_start = [
-        control_node,
-        robot_state_publisher_node,
-        # rviz_node,
-        joint_state_broadcaster_spawner,
-        delay_joint_controller_spawner_after_joint_state_broadcaster_spawner,
+        control_node, # Ros2 control node, spawns the other controllers & handles their interactions.
+        robot_state_publisher_node, # Publishes the state of the robot via RWS, handles further configuration.
+        # rviz_node, # Disabled due to Rviz being started by the launch_app.
+        joint_state_broadcaster_spawner, # Sends out the current state of the robot joints, used for updating the TF tree & similar.
+        delay_joint_controller_spawner_after_joint_state_broadcaster_spawner, # Make sure the joint controller only spawns after the broadcaster so it doesn't start with issues.
     ]
 
     return LaunchDescription(declared_arguments + nodes_to_start)
