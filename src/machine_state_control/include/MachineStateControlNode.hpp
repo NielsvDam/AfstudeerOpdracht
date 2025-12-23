@@ -4,7 +4,6 @@
 #include <memory>                            // std::shared_ptr
 #include <rclcpp/rclcpp.hpp>                 // rclcpp::Node
 #include <rclcpp_action/rclcpp_action.hpp>   // rclcpp_action::Client
-#include <melfa_msgs/srv/gpio_configure.hpp> // melfa_msgs::srv::GpioConfigure
 #include <nav_msgs/msg/path.hpp>             // nav_msgs::msg::Path
 
 #include <custom_msgs/srv/machine_control.hpp>       // custom_msgs::srv::MachineControl
@@ -38,12 +37,6 @@ public:
      * @return std::shared_ptr<MachineStateControlNode> The instance of the MachineStateControlNode.
      */
     static std::shared_ptr<MachineStateControlNode> getInstance();
-    /**
-     * @brief Get the gripper service client.
-     *
-     * @return rclcpp::Client<melfa_msgs::srv::GpioConfigure>::SharedPtr The gripper service client.
-     */
-    rclcpp::Client<melfa_msgs::srv::GpioConfigure>::SharedPtr getGripperServiceClient() const;
     /**
      * @brief Get the Execute Trajectory Client.
      *
@@ -88,7 +81,6 @@ private:
 
     rclcpp::Service<custom_msgs::srv::MachineControl>::SharedPtr controlOperationStateServer; /* The machine control
                                                                                                  service */
-    rclcpp::Client<melfa_msgs::srv::GpioConfigure>::SharedPtr gripperServiceClient; /* The gripper service client */
     rclcpp_action::Client<custom_msgs::action::ExecuteTrajectory>::SharedPtr executeTrajectoryClient; /* The
                                                                                                          ExecuteTrajectory
                                                                                                          Client */

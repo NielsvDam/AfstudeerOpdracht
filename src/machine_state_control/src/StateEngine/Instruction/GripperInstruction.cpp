@@ -1,6 +1,5 @@
 #include "StateEngine/Instruction/GripperInstruction.hpp"
 
-#include <melfa_msgs/srv/gpio_configure.hpp> // melfa_msgs::srv::GpioConfigure
 #include <rclcpp/rclcpp.hpp>                 // RCLCPP_INFO
 
 #include "MachineStateControlNode.hpp"

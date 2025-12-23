@@ -2,9 +2,10 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>machine_state_control</name>
-  <version>1.0.0</version>
-  <description>Test code for MoveIt and ROS melfa</description>
-  <maintainer email="t.van.dijk@ma-it.nl">Tjeerd van Dijk</maintainer>
+  <version>1.2.0</version>
+  <description>The state machine and main controller for the ROS2 system.</description>
+  <maintainer email="t.van.dijk@ma-it.nl">Tjeerd van Dijk</maintainer> <!-- Original author & maintainer, done with MELFA cobot. -->
+  <maintainer email="n.van.dam@ma-it.nl">Niels van Dam</maintainer> <!-- Follow-up project, switch to ABB robot. -->
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
@@ -13,7 +14,6 @@
   <depend>rclcpp_action</depend>
   <depend>moveit_ros_planning_interface</depend>
   <depend>moveit_core</depend>
-  <depend>melfa_msgs</depend> <!-- <<! ABB needed >> -->
   <depend>ament_index_cpp</depend>
   <depend>realsense2_camera</depend>
   <depend>custom_msgs</depend>

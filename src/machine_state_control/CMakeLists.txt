@@ -25,7 +25,6 @@ FIND_PACKAGE(ament_cmake REQUIRED)
 FIND_PACKAGE(rclcpp REQUIRED)
 FIND_PACKAGE(rclcpp_action REQUIRED)
 FIND_PACKAGE(moveit_ros_planning_interface REQUIRED)
-FIND_PACKAGE(melfa_msgs REQUIRED) #<<! To be removed. >>
 FIND_PACKAGE(ament_index_cpp REQUIRED)
 FIND_PACKAGE(custom_msgs REQUIRED)
 FIND_PACKAGE(std_srvs REQUIRED)
@@ -36,7 +35,6 @@ SET(DEPENDENCIES
     rclcpp
     rclcpp_action
     moveit_ros_planning_interface
-    melfa_msgs #<<! To be removed. >>
     ament_index_cpp
     custom_msgs
     std_srvs
