@@ -131,7 +131,7 @@ private:
      * @param debuggingMatrix a matrix to store results for debugging purposes. Also visualized in rviz2 afterwards
      * @return std::vector<geometry_msgs::msg::Pose> the poses of the detected objects
      */
-    static std::vector<geometry_msgs::msg::Pose> detectObjects(
+    std::vector<geometry_msgs::msg::Pose> detectObjects(
         const Matrix<float>& originalMatrix,
         Matrix<float>& detectionMatrix,
         Matrix<float>& debuggingMatrix);

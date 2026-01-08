@@ -10,6 +10,8 @@
 #include "MatrixFilters.hpp"
 #include "Conversion.hpp"
 
+#include <opencv2/opencv.hpp> // Access to OpenCV functions.
+
 // #define DELAYED
 // Additions to allow for temporary delay to be added. Not needed when simulating or when running with static camera.
 #ifdef DELAYED
@@ -362,7 +364,7 @@ sensor_msgs::msg::PointCloud2::SharedPtr ObjectDetectNode::waitForPointCloud()
     objectPoses = transformedPoses;
 }
 
-/* static */ std::vector<geometry_msgs::msg::Pose> ObjectDetectNode::detectObjects(
+std::vector<geometry_msgs::msg::Pose> ObjectDetectNode::detectObjects(
     const Matrix<float>& originalMatrix,
     Matrix<float>& detectionMatrix,
     Matrix<float>& debuggingMatrix)
@@ -375,6 +377,74 @@ sensor_msgs::msg::PointCloud2::SharedPtr ObjectDetectNode::waitForPointCloud()
     MatrixFilters::sufaceExtractionFilter(detectionMatrix);
 
     // MatrixFilters::morphOpen(detectionMatrix, morphologyKernelSize, morphologyIterations);
+
+    // Prototyping section
+    // Transform matrix to cv2 points.
+    int detectionMatrix_x = detectionMatrix.getRows(); // 1120
+    int detectionMatrix_y = detectionMatrix.getCols(); // 720
+
+    RCLCPP_INFO(this->get_logger(), "Matrix is %i by %i",detectionMatrix_x,detectionMatrix_y);
+
+    cv::Mat detectionImage(detectionMatrix_y, detectionMatrix_x,CV_32FC1);
+    for (int index_x = 0; index_x < detectionMatrix_x; index_x++) {
+
+        for (int index_y = 0; index_y < detectionMatrix_y; index_y++) {
+
+            // Loop through every square in this matrix: Expensive to do.
+            float buffer = detectionMatrix.at(index_x,index_y);
+
+            if (std::isnan(buffer)) {
+                buffer = 0.0;
+            }
+
+            detectionImage.at<float>(index_y,index_x) = buffer;
+            // RCLCPP_INFO(this->get_logger(), "Set %i,%i to %f",index_y,index_x,detectionImage.at<float>(index_y,index_x));
+
+        }
+
+    }
+
+    float distanceTransformMultiplier = 0.7;
+
+    cv::Mat tresholdImage(detectionMatrix_x, detectionMatrix_y,CV_32FC1);
+    cv::Mat sureBackground(detectionMatrix_x, detectionMatrix_y,CV_32FC1);
+    cv::Mat distanceTransform(detectionMatrix_x, detectionMatrix_y,CV_32FC1);
+    cv::Mat sureForeground(detectionMatrix_x, detectionMatrix_y,CV_32FC1);
+
+    cv::Mat binaryWorkImage(detectionMatrix_x, detectionMatrix_y,CV_8UC1);
+    
+    cv::dilate(detectionImage, sureBackground, cv::Mat()); // Dilate with default 3,3 kernel.
+
+    // Mat, change detectionImage to CV_8UC1.
+    detectionImage.convertTo(binaryWorkImage,CV_8UC1);
+
+    cv::threshold(binaryWorkImage,tresholdImage,0,255,cv::THRESH_BINARY | cv::THRESH_OTSU);
+
+    cv::distanceTransform(tresholdImage, distanceTransform, cv::DIST_L2, 5);
+
+    cv::threshold(distanceTransform, sureForeground, distanceTransformMultiplier, 1.0, cv::THRESH_BINARY);
+
+    cv::Mat unknownRegions = cv::Mat(detectionMatrix_y, detectionMatrix_x,CV_8UC1);
+
+    cv::subtract(sureBackground,sureForeground,unknownRegions);
+
+    std::vector<std::vector<cv::Point>> contours;
+
+    cv::findContours(sureForeground, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+    
+    
+
+
+
+
+    cv::imshow("Testing output",detectionImage);
+    cv::imshow("Sure Background",sureBackground);
+    cv::imshow("Distance transform", distanceTransform);
+    cv::imshow("Sure foreground", sureForeground);
+
+    cv::waitKey(0); // Delay unless pressed.
+    
 
     std::vector<geometry_msgs::msg::Pose> poses;
     MatrixSegmentFinder<float> matrixSegmentFinder(detectionMatrix);

@@ -218,5 +218,6 @@
 		"/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/install/local/lib/python3.10/dist-packages",
 		"/opt/ros/humble/lib/python3.10/site-packages",
 		"/opt/ros/humble/local/lib/python3.10/dist-packages"
-	]
+	],
+	"ROS2.distro": "humble"
 }
