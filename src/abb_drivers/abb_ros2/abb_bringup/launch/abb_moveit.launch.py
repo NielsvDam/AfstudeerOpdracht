@@ -146,8 +146,8 @@ def launch_setup(context, *args, **kwargs):
     nodes_to_start = [
         move_group_node, 
         # rviz_node, # Disabled, current app already boots its own rviz.
-        static_tf_node, # Unknown if needed.
-        robot_state_pub_node # Unknown if needed. Replaces the servo node system.
+        static_tf_node, # Creates and controls the (static) TF tree, uses the robot_state_pub node to update itself.
+        robot_state_pub_node # Publishes the robot states.
         ]
     return nodes_to_start
 

@@ -20,7 +20,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'robot_ip',
-            default_value='192.168.125.12', # <<! ABB - Change IP to match service port host address. >>
+            default_value='192.168.125.12',
             description='Robot IP address'
         )
     )
@@ -110,7 +110,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory('abb_bringup'), 'launch', 'abb_rws_client.launch.py')
         ),
-        launch_arguments={
+        launch_arguments={  
             'robot_ip': robot_ip,
             'robot_port': robot_port,
             'robot_nickname': robot_nickname,
