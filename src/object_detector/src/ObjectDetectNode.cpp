@@ -406,37 +406,47 @@ std::vector<geometry_msgs::msg::Pose> ObjectDetectNode::detectObjects(
 
     float distanceTransformMultiplier = 0.7;
 
-    cv::Mat tresholdImage(detectionMatrix_x, detectionMatrix_y,CV_32FC1);
-    cv::Mat sureBackground(detectionMatrix_x, detectionMatrix_y,CV_32FC1);
+    cv::Mat tresholdImage(detectionMatrix_x, detectionMatrix_y,CV_8UC1);
+    cv::Mat sureBackground(detectionMatrix_x, detectionMatrix_y,CV_8UC1);
     cv::Mat distanceTransform(detectionMatrix_x, detectionMatrix_y,CV_32FC1);
-    cv::Mat sureForeground(detectionMatrix_x, detectionMatrix_y,CV_32FC1);
-
-    cv::Mat binaryWorkImage(detectionMatrix_x, detectionMatrix_y,CV_8UC1);
-    
-    cv::dilate(detectionImage, sureBackground, cv::Mat()); // Dilate with default 3,3 kernel.
-
-    // Mat, change detectionImage to CV_8UC1.
-    detectionImage.convertTo(binaryWorkImage,CV_8UC1);
-
-    cv::threshold(binaryWorkImage,tresholdImage,0,255,cv::THRESH_BINARY | cv::THRESH_OTSU);
-
-    cv::distanceTransform(tresholdImage, distanceTransform, cv::DIST_L2, 5);
-
-    cv::threshold(distanceTransform, sureForeground, distanceTransformMultiplier, 1.0, cv::THRESH_BINARY);
+    cv::Mat sureForeground(detectionMatrix_x, detectionMatrix_y,CV_8UC1);
 
     cv::Mat unknownRegions = cv::Mat(detectionMatrix_y, detectionMatrix_x,CV_8UC1);
 
+    cv::Mat binaryWorkImage(detectionMatrix_x, detectionMatrix_y,CV_8UC1);
+    
+    // Get inversion of what is definitely background.
+    cv::dilate(detectionImage, sureBackground, cv::Mat()); // Dilate with default 3,3 kernel.
+
+    // Change detectionImage to CV_8UC1.
+    detectionImage.convertTo(binaryWorkImage,CV_8UC1);
+    // Change sureBackground to CV_8UC1 to prevent messy types later on.
+    sureBackground.convertTo(sureBackground,CV_8UC1);
+
+    // Get inital treshhold to force binary values.
+    cv::threshold(binaryWorkImage,tresholdImage,0,255,cv::THRESH_BINARY | cv::THRESH_OTSU);
+
+    // Distancetransform turns a binary mask into a gradient from closest to furthest from pixel concentrations.
+    cv::distanceTransform(tresholdImage, distanceTransform, cv::DIST_L2, 5, CV_32FC1);
+    // Normalize image from full float length to 0.0 - 1.0 for visualization and further processing.
+    cv::normalize(distanceTransform, distanceTransform, 0.0, 1.0, cv::NORM_MINMAX);
+
+    // Assign and fill max with the maximum float in the image. Allows dynamic weighting for smaller or bigger object sizes. (double due to func requirements).
+    double max; cv::minMaxIdx(distanceTransform,NULL,&max); 
+    
+    // Cut the transform to a layer of definitely foreground.
+    cv::threshold(distanceTransform, sureForeground, distanceTransformMultiplier*(float)max, 255, cv::THRESH_BINARY); 
+
+    // Change sureForeground to CV_8UC1 to prevent the types from messing up again.
+    sureForeground.convertTo(sureForeground, CV_8UC1);
+ 
+    // Determine which sections are unknown and to be filled in by the watershed algorithm.
     cv::subtract(sureBackground,sureForeground,unknownRegions);
 
     std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i> hierarchy; 
 
-    cv::findContours(sureForeground, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
-    
-    
-
-
-
+    cv::findContours(sureForeground, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
     cv::imshow("Testing output",detectionImage);
     cv::imshow("Sure Background",sureBackground);
@@ -444,7 +454,24 @@ std::vector<geometry_msgs::msg::Pose> ObjectDetectNode::detectObjects(
     cv::imshow("Sure foreground", sureForeground);
 
     cv::waitKey(0); // Delay unless pressed.
-    
+
+    // For debugging, report all image types.
+    RCLCPP_INFO(this->get_logger(), "binaryworkImage type is: %i", binaryWorkImage.type());
+    RCLCPP_INFO(this->get_logger(), "tresholdImage type is: %i", tresholdImage.type());
+    RCLCPP_INFO(this->get_logger(), "sureBackground type is: %i", sureBackground.type());
+    RCLCPP_INFO(this->get_logger(), "distanceTransform type is: %i", distanceTransform.type());
+    RCLCPP_INFO(this->get_logger(), "sureForeground type is: %i", sureForeground.type());
+    RCLCPP_INFO(this->get_logger(), "Max value from distance transform is %f", max);
+
+    /* Numlookup for types:
+           C1  C2   C3  C4
+    CV_8U	0	8	16	24
+    CV_8S	1	9	17	25
+    CV_16U	2	10	18	26
+    CV_16S	3	11	19	27
+    CV_32S	4	12	20	28
+    CV_32F	5	13	21	29
+    CV_64F	6	14	22	30 */
 
     std::vector<geometry_msgs::msg::Pose> poses;
     MatrixSegmentFinder<float> matrixSegmentFinder(detectionMatrix);
