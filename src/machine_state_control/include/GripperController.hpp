@@ -17,21 +17,16 @@ static const char LOGGER_NAME[] = "GripperController"; // Solution comes with ai
  * @brief The object used to control the gripper in the statemachine. This way it is (partially) robot-independent, only needing this object to be changed with different IO controllers.
  * 
  * 
- * @note The GripperController is a singleton to make access easier from within the statemachine.
+ * @note The GripperController is not a singleton (like the MachineStateControlNode), but is contained within it.
  */
 class GripperController
 {
 public:
     virtual ~GripperController(); // Deconstructor.
-    GripperController(GripperController const&) = delete; // Prevent the copying of this object.
-    GripperController& operator=(GripperController const&) = delete; // Prevent the copying of this object.
-
     /**
-     * @brief Get the instance of this controller.
-     * 
-     * @return std::shared_ptr<GripperController> The shared pointer to the instance of this controller.
-    */
-    static std::shared_ptr<GripperController> getInstance();
+     *  @brief Instanciate the GripperController, intended to only be carried out for the MSC-Node.
+     */
+    GripperController();
 
     /**
      * @brief Set the gripper to closed/open (true/false).

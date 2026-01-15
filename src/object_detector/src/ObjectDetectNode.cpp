@@ -443,7 +443,7 @@ std::vector<geometry_msgs::msg::Pose> ObjectDetectNode::detectObjects(
     // Determine which sections are unknown and to be filled in by the watershed algorithm.
     cv::subtract(sureBackground,sureForeground,unknownRegions);
 
-    std::vector<std::vector<cv::Point>> contours;
+    std::vector<std::vector<cv::Point>> contours;   
     std::vector<cv::Vec4i> hierarchy; 
 
     cv::findContours(sureForeground, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
