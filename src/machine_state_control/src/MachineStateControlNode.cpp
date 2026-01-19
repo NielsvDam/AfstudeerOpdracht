@@ -12,8 +12,6 @@ MachineStateControlNode::MachineStateControlNode()
               this,
               std::placeholders::_1,
               std::placeholders::_2))),
-      // Create the gripper service client
-      gripperServiceClient(create_client<melfa_msgs::srv::GpioConfigure>("/gpio_controller/configure_gpio")),
       // Create the execute trajectory action client
       executeTrajectoryClient(
           rclcpp_action::create_client<custom_msgs::action::ExecuteTrajectory>(this, "/execute_trajectory2")),
@@ -35,11 +33,6 @@ MachineStateControlNode::MachineStateControlNode()
 void MachineStateControlNode::initialize()
 {
     stateEngine.initialize();
-}
-
-rclcpp::Client<melfa_msgs::srv::GpioConfigure>::SharedPtr MachineStateControlNode::getGripperServiceClient() const
-{
-    return gripperServiceClient;
 }
 
 rclcpp_action::Client<custom_msgs::action::ExecuteTrajectory>::SharedPtr MachineStateControlNode::

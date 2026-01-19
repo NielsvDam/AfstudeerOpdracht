@@ -7,6 +7,7 @@
          pose_2: [0.19, 0.69, -0.199,-0.9239, -0.3827, 0.0, 0.0]
          pose_3: [0.236, 0.498, -0.199, -0.707, -0.707, 0.0, 0.0]
          pose_4: [-0.236, 0.398, -0.199, -0.9239, -0.3827, 0.0, 0.0]
+         # <<! Alter these for new setup, locations have almost definitely changed inbetween. >>
 
       # please adjust below values in HMI. values are overwritten at runtime.
       camera_tuning_x: 0.0

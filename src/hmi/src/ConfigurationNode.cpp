@@ -81,18 +81,18 @@ void ConfigurationNode::park()
 {
     auto action_client = rclcpp_action::create_client<control_msgs::action::FollowJointTrajectory>(
         this,
-        "/rv5as_controller/follow_joint_trajectory");
+        "/joint_trajectory_controller/follow_joint_trajectory");
 
     // Wait for the action server to be available
     while (!action_client->wait_for_action_server(std::chrono::seconds(1)))
     {
-        RCLCPP_WARN(this->get_logger(), "Waiting for action server /rv5as_controller/follow_joint_trajectory...");
+        RCLCPP_WARN(this->get_logger(), "Waiting for action server /joint_trajectory_controller/follow_joint_trajectory...");
     }
 
     // First goal
     control_msgs::action::FollowJointTrajectory::Goal goal1;
     goal1.trajectory.joint_names =
-        {"rv5as_joint_1", "rv5as_joint_2", "rv5as_joint_3", "rv5as_joint_4", "rv5as_joint_5", "rv5as_joint_6"};
+        {"joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6"};
     trajectory_msgs::msg::JointTrajectoryPoint point1;
     point1.positions = {1.57079, 0.331612, 1.815142, 0.05235, 1.012290, 0.0};
     point1.velocities = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
@@ -117,7 +117,7 @@ void ConfigurationNode::park()
     // Second goal
     control_msgs::action::FollowJointTrajectory::Goal goal2;
     goal2.trajectory.joint_names =
-        {"rv5as_joint_1", "rv5as_joint_2", "rv5as_joint_3", "rv5as_joint_4", "rv5as_joint_5", "rv5as_joint_6"};
+        {"joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6"};
     trajectory_msgs::msg::JointTrajectoryPoint point2;
     point2.positions = {-0.122173, -0.610865, 2.565634, 0.0, 1.151917, -0.191986};
     point2.velocities = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
@@ -142,7 +142,7 @@ void ConfigurationNode::park()
     // Third goal
     control_msgs::action::FollowJointTrajectory::Goal goal3;
     goal3.trajectory.joint_names =
-        {"rv5as_joint_1", "rv5as_joint_2", "rv5as_joint_3", "rv5as_joint_4", "rv5as_joint_5", "rv5as_joint_6"};
+        {"joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6"};
     trajectory_msgs::msg::JointTrajectoryPoint point3;
     point3.positions = {-0.1396263402, -0.1570796327, 2.6005405855, -0.0698131701, 1.1868238914, -0.0698131701};
     point3.velocities = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
@@ -168,18 +168,18 @@ void ConfigurationNode::unPark()
 {
     auto action_client = rclcpp_action::create_client<control_msgs::action::FollowJointTrajectory>(
         this,
-        "/rv5as_controller/follow_joint_trajectory");
+        "/joint_trajectory_controller/follow_joint_trajectory");
 
     // Wait for the action server to be available
     while (!action_client->wait_for_action_server(std::chrono::seconds(1)))
     {
-        RCLCPP_WARN(this->get_logger(), "Waiting for action server /rv5as_controller/follow_joint_trajectory...");
+        RCLCPP_WARN(this->get_logger(), "Waiting for action server /joint_trajectory_controller/follow_joint_trajectory...");
     }
 
     // First goal
     control_msgs::action::FollowJointTrajectory::Goal goal1;
     goal1.trajectory.joint_names =
-        {"rv5as_joint_1", "rv5as_joint_2", "rv5as_joint_3", "rv5as_joint_4", "rv5as_joint_5", "rv5as_joint_6"};
+        {"joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6"};
     trajectory_msgs::msg::JointTrajectoryPoint point1;
     point1.positions = {-0.122173, -0.610865, 2.565634, 0.0, 1.151917, -0.191986};
     point1.velocities = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
@@ -204,7 +204,7 @@ void ConfigurationNode::unPark()
     // Second goal
     control_msgs::action::FollowJointTrajectory::Goal goal2;
     goal2.trajectory.joint_names =
-        {"rv5as_joint_1", "rv5as_joint_2", "rv5as_joint_3", "rv5as_joint_4", "rv5as_joint_5", "rv5as_joint_6"};
+        {"joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6"};
     trajectory_msgs::msg::JointTrajectoryPoint point2;
     point2.positions = {1.57079, 0.331612, 1.815142, 0.05235, 1.012290, 0.0};
     point2.velocities = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};

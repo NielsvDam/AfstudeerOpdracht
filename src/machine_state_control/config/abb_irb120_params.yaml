@@ -1,0 +1,19 @@
+/**:
+   ros__parameters:
+      # Parameters for MoveIt2 & path planning.
+      planning_group: abb_irb120_arm
+      gripper_tcp_link: tool_tcp # Check this, current value requires offset, some way to fix the issue from extended chain/group would help remove this. (By turning it into tool_tcp.)
+      crate_inner_bottom_center_link: crate_inner_bottom_center
+      place_center_link : place_center
+      camera_tcp_link : camera_tcp
+
+      # Parameters for the gripper.
+      signal_gripper_in : GRIPPER_IN # The signalname from RobotWare for the intake valve.
+      signal_gripper_out : GRIPPER_OUT # The signalname from RobotWare for the exhaust valve.
+
+      # please adjust below values in HMI. values are overwritten at runtime.
+      picture_distance: 0.3 # distance from the camera to the crate (when taking a picture) (in meters)
+      velocity_scaling: 0.26000
+      acceleration_scaling: 0.8
+      ignore_block_collisions: false
+      place_z_offset: 0.0

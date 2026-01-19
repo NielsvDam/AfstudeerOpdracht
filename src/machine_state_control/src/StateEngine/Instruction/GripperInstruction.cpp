@@ -1,9 +1,9 @@
 #include "StateEngine/Instruction/GripperInstruction.hpp"
 
-#include <melfa_msgs/srv/gpio_configure.hpp> // melfa_msgs::srv::GpioConfigure
 #include <rclcpp/rclcpp.hpp>                 // RCLCPP_INFO
 
 #include "MachineStateControlNode.hpp"
+#include "GripperController.hpp"
 
 namespace instruction
 {
@@ -15,17 +15,40 @@ namespace instruction
 
     void GripperInstruction::execute()
     {
-        const uint16_t GRIPPER_OPEN = 0b10;
-        const uint16_t GRIPPER_CLOSE = 0b01;
+        // Alter this to reflect the new gripper system.
+        // Simply put: Replace request into open/close function to send out service calls.
+        int8_t output;
 
-        auto request = std::make_shared<melfa_msgs::srv::GpioConfigure::Request>();
-        request->bitid = 900;
-        request->mode = "WRITE_OUT";
-        request->bitmask = 0xFFFF;
-        request->bitdata = open ? GRIPPER_OPEN : GRIPPER_CLOSE;
+        auto gripperController = GripperController::getInstance();
 
-        auto gripperServiceClient = MachineStateControlNode::getInstance()->getGripperServiceClient();
-        RCLCPP_INFO(logger, "Sending gripper command: %s", open ? "open" : "close");
-        gripperServiceClient->async_send_request(request);
+        int8_t currentState = gripperController->getGripperState();
+        if(currentState==-1){
+            RCLCPP_INFO(logger, "Service call failed, check prior logger output.");
+            return;
+        }
+        
+        // For performance reasons, ignore request if gripper already at requested state.
+        if (open == currentState) {
+            RCLCPP_INFO(logger,"Already %s, ignoring command to speed things up.", open ? "opened" : "closed");
+            return;
+        }
+
+        // Carry out the open/close.
+        output = gripperController->gripperSet(open);
+
+        // Check if output was a -1 to cut the further proces short.
+        if (!(output == 1 || output == 0)) {
+            RCLCPP_INFO(logger, "Service call failed, check prior logger output.");
+            return;
+        }
+
+        // Report what the output was if valid (0/1).
+        if (!output) {
+            RCLCPP_INFO(logger, "Gripper %s failed, got false from controller.", open ? "open" : "close");
+        } else {
+            RCLCPP_INFO(logger, "Gripper %s.", open ? "opened" : "closed");
+        }
+        
+        return;
     }
 } // namespace instruction

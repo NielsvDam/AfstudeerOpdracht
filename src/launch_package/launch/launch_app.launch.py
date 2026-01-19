@@ -42,12 +42,12 @@ def generate_launch_description():
 
     # rviz configuration
     rviz_config_file = os.path.join(
-        get_package_share_directory('launch_package'),
+        get_package_share_directory('launch_package'), #<<! Altered from launch_package : rviz : rv5as_camera.rviz
         'rviz',
-        'rv5as_camera.rviz'
+        'abb_irb120_setup.rviz' #<<! Change to abb_irb120 rviz package once made. >>
     )
     # moveit configuration for rviz node (robot model, kinematics, etc.)
-    moveit_config = MoveItConfigsBuilder("rv5as", package_name="melfa_rv5as_moveit_config").to_moveit_configs()
+    moveit_config = MoveItConfigsBuilder("abb_irb120", package_name="abb_irb120_moveit_config").to_moveit_configs() # Was "rv5as" and "melfa_rv5as_moveit_config".
 
     # rviz node
     rviz_node = Node(

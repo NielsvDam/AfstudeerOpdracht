@@ -10,6 +10,18 @@
 #include "MatrixFilters.hpp"
 #include "Conversion.hpp"
 
+// #define DELAYED
+// Additions to allow for temporary delay to be added. Not needed when simulating or when running with static camera.
+#ifdef DELAYED
+
+#define START_DELAY 500
+#define END_DELAY 100
+
+#include <thread>
+#include <chrono>
+
+#endif
+
 ObjectDetectNode::~ObjectDetectNode() {}
 
 ObjectDetectNode::ObjectDetectNode()
@@ -77,8 +89,8 @@ void ObjectDetectNode::publishCameraTransform()
 
     geometry_msgs::msg::TransformStamped transform;
     transform.header.stamp = this->get_clock()->now();
-    transform.header.frame_id = "rv5as_camera_tcp";
-    transform.child_frame_id = "camera_link";
+    transform.header.frame_id = "camera_tcp"; // HARDCODED, TODO | rv5as_camera_tcp
+    transform.child_frame_id = "camera_link"; // HARDCODED, TODO | camera_link // Disabled to test the effects.
     transform.transform.translation.x = x;
     transform.transform.translation.y = y;
     transform.transform.translation.z = z;
@@ -207,6 +219,10 @@ void ObjectDetectNode::executePictureAction(
     // NOLINTNEXTLINE (performance-unnecessary-value-param) // can't change definition in ros sourcecode
     const std::shared_ptr<rclcpp_action::ServerGoalHandle<custom_msgs::action::Picture>> goal_handle)
 {
+
+    #ifdef DELAYED
+    std::this_thread::sleep_for(std::chrono::milliseconds(START_DELAY));
+    #endif
     // retrieve the latest pointcloud
     RCLCPP_INFO(this->get_logger(), "waiting for pointcloud");
     const sensor_msgs::msg::PointCloud2::SharedPtr pointCloud = waitForPointCloud();
@@ -224,6 +240,10 @@ void ObjectDetectNode::executePictureAction(
         auto result = std::make_shared<custom_msgs::action::Picture::Result>();
         goal_handle->abort(result);
     }
+
+    #ifdef DELAYED
+    std::this_thread::sleep_for(std::chrono::milliseconds(END_DELAY));
+    #endif
 
     // send feedback that the picture has been taken.
     auto feedback = std::make_shared<custom_msgs::action::Picture::Feedback>();
@@ -351,6 +371,7 @@ sensor_msgs::msg::PointCloud2::SharedPtr ObjectDetectNode::waitForPointCloud()
     // Filter the matrix
     detectionMatrix = originalMatrix;
     MatrixFilters::nanFilter(detectionMatrix);
+    debuggingMatrix = detectionMatrix; // Output NAN-filtered matrix without extracting surface as debugging matrix.
     MatrixFilters::sufaceExtractionFilter(detectionMatrix);
 
     // MatrixFilters::morphOpen(detectionMatrix, morphologyKernelSize, morphologyIterations);

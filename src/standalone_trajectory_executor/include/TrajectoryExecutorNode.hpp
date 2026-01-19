@@ -1,6 +1,8 @@
 #ifndef TRAJECTORYEXECUTORNODE_HPP
 #define TRAJECTORYEXECUTORNODE_HPP
 
+#define PUBLISH_CURRENT // Comment this out if you do not want to publish the currently executed trajectory.
+
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
@@ -10,6 +12,10 @@
 #include <condition_variable>
 #include <vector>
 #include <string>
+
+#ifdef PUBLISH_CURRENT
+#include <moveit_msgs/msg/display_trajectory.hpp>
+#endif
 
 /**
  * @class TrajectoryExecutorNode
@@ -135,6 +141,12 @@ private:
     std::condition_variable jointStateCv;           /* A condition variable to notify waiting threads
                                                        for an update on the joint state. */
     sensor_msgs::msg::JointState currentJointState; /* The current joint state of the robot. */
+
+    #ifdef PUBLISH_CURRENT
+    rclcpp::Publisher<moveit_msgs::msg::DisplayTrajectory>::SharedPtr currentPathPublisher;
+    // Addition of a Trajectory publisher for both debugging and path-execution monitoring. (I.E, this will publish the currently executing path only.)
+    #endif
+
 };
 
 #endif // TRAJECTORYEXECUTORNODE_HPP

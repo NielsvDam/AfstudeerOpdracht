@@ -43,7 +43,7 @@ namespace state_engine
         moveGroup = std::make_shared<moveit::planning_interface::MoveGroupInterface>(controlNode, planningGroup);
         moveGroup->setMaxAccelerationScalingFactor(acceleration);
         moveGroup->setGoalPositionTolerance(0.001);
-        moveGroup->setGoalJointTolerance(0.005);
+        moveGroup->setGoalJointTolerance(0.015); // Changed from 0.005 to fix issue with Pick position planning.
         moveGroup->setPlanningTime(4.0);
         moveGroup->setNumPlanningAttempts(20);
         moveGroup->startStateMonitor();
@@ -185,7 +185,7 @@ namespace state_engine
     {
         std::lock_guard<std::mutex> lock(pickSolutionMtx);
         // Attempt to find the pick solution using the pick solution finder
-        pick_solution_finder::PickSolutionFinder pickSolutionFinder(detectedObjects, unknownAreas, moveGroup);
+        pick_solution_finder::PickSolutionFinder pickSolutionFinder(logger, detectedObjects, unknownAreas, moveGroup);
         pickSolution = pickSolutionFinder.findSolution(); // its nullptr if no solution is found. This is intended
         pickSolutionNotified = true;
         pickSolutionCv.notify_all();

@@ -1,10 +1,16 @@
 #ifndef PLACESTATEPIPELINE_HPP
 #define PLACESTATEPIPELINE_HPP
 
+#define NEAR_OBJECT_VELOCITY_SCALING 0.05 // The velocity scaling for any movements near/directly with the objects. Raising this whilst using a robot (instead of a cobot) is seriously ill-advised.
+// Scaling also defined in PickStatePipeline.hpp, not shared between files yet.
+
 #include <tf2/LinearMath/Quaternion.h> // tf2::Quaternion
 
 #include "AbstractStatePipeline.hpp"        // state_pipeline::AbstractStatePipeline
 #include "StateEngine/State/PlaceState.hpp" // state::PlaceState
+
+#include <geometry_msgs/msg/pose.h>         // geometry_msgs::msg::Pose
+#include <geometry_msgs/msg/pose_stamped.h> // geometry_msgs::msg::PoseStamped
 
 /**
  * @namespace state_pipeline
@@ -50,13 +56,14 @@ namespace state_pipeline
     private:
         /**
          * @brief Get the pose of the vice for placing the object.
-         *
+         * 
          * @return geometry_msgs::msg::Pose
          */
         geometry_msgs::msg::Pose getNextPlacePose();
         inline static const std::string LOGGER_NAME = "PlaceStatePipeline"; /* The logger name for this pipeline. */
         geometry_msgs::msg::Pose placePose; /* The pose of the vice for placing the object. */
         tf2::Quaternion pickOrientation;    /* The orientation of the pick pose. */
+        const std::shared_ptr<moveit::planning_interface::MoveGroupInterface>& moveGroup;
     };
 } // namespace state_pipeline
 

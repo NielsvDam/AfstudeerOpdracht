@@ -25,21 +25,21 @@ FIND_PACKAGE(ament_cmake REQUIRED)
 FIND_PACKAGE(rclcpp REQUIRED)
 FIND_PACKAGE(rclcpp_action REQUIRED)
 FIND_PACKAGE(moveit_ros_planning_interface REQUIRED)
-FIND_PACKAGE(melfa_msgs REQUIRED)
 FIND_PACKAGE(ament_index_cpp REQUIRED)
 FIND_PACKAGE(custom_msgs REQUIRED)
 FIND_PACKAGE(std_srvs REQUIRED)
 FIND_PACKAGE(nav_msgs REQUIRED)
+FIND_PACKAGE(abb_robot_msgs REQUIRED) # Dependency on ABB drivers, replace with plugin-structure with addition to driver if possible.
 
 SET(DEPENDENCIES
     rclcpp
     rclcpp_action
     moveit_ros_planning_interface
-    melfa_msgs
     ament_index_cpp
     custom_msgs
     std_srvs
-    nav_msgs)
+    nav_msgs
+    abb_robot_msgs) # See ABB dependency line above. (Replace with plugin-structure when possible.)
 
 INCLUDE_DIRECTORIES(include)
 
@@ -72,6 +72,7 @@ SET(SOURCE_FILES
     src/PickSolutionFinder/PickSolutionFinder.cpp
     src/PickSolutionFinder/PickSolution.cpp
     src/PickSolutionFinder/PickPoseUtils.cpp
+    src/GripperController.cpp # Gripper control object, explicitly implements functionality for the ABB AWS/Gripper control.
     src/MachineStateControlNode.cpp)
 
 ADD_EXECUTABLE(

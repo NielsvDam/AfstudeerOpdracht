@@ -11,10 +11,11 @@ def generate_launch_description():
     config = os.path.join(
       get_package_share_directory('machine_state_control'),
       'config',
-      'rv5as_params.yaml'
+      'abb_irb120_params.yaml' # 'rv5as_params.yaml'
     )
 
-    moveit_config = MoveItConfigsBuilder("rv5as", package_name="melfa_rv5as_moveit_config").to_moveit_configs()
+    moveit_config = MoveItConfigsBuilder("abb_irb120", package_name="abb_irb120_moveit_config").to_moveit_configs() #<<! ABB Addition Needed >>
+    # Original line for MELFA: moveit_config = MoveItConfigsBuilder("rv5as", package_name="melfa_rv5as_moveit_config").to_moveit_configs()
     machine_state_control_node = Node(
         package="machine_state_control",
         executable="machine_state_control",

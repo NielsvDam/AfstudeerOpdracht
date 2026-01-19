@@ -8,6 +8,14 @@
 		"commands": [
 			{
 				"cwd": "${workspaceFolder}",
+				"tooltip":"Open sourced & rviz fixed terminal.",
+				"name": "Sourced Terminal",
+				"color": "white",
+				"singleInstance": false,
+				"command": ". ./scripts/sourced_terminal.sh && . install/setup.bash"
+			},
+			{
+				"cwd": "${workspaceFolder}",
 				"tooltip": "Format current file",
 				"name": "$(request-changes) Format",
 				"color": "white",
@@ -197,4 +205,18 @@
 		"stack": "cpp"
 	},
 	"cmake.sourceDirectory": "/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/src/custom_msgs",
+	"urdf-visualizer.packages": {
+  		"abb_irb120_support": "src/abb_drivers/abb_ros2/robot_specific_config/abb_irb120_support",
+		"melfa_description": "src/mitsubishi_driver/melfa_description"
+	},
+	"python.autoComplete.extraPaths": [
+		"/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/install/local/lib/python3.10/dist-packages",
+		"/opt/ros/humble/lib/python3.10/site-packages",
+		"/opt/ros/humble/local/lib/python3.10/dist-packages"
+	],
+	"python.analysis.extraPaths": [
+		"/home/usermait/Desktop/bin_picking_robotarm-hoofdapplicatie/install/local/lib/python3.10/dist-packages",
+		"/opt/ros/humble/lib/python3.10/site-packages",
+		"/opt/ros/humble/local/lib/python3.10/dist-packages"
+	]
 }

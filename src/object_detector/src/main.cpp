@@ -4,9 +4,13 @@
 
 #include "ObjectDetectNode.hpp"
 
+
 int main(int argc, char** argv)
 {
     rclcpp::init(argc, argv);
+
+
+
     auto node = ObjectDetectNode::getInstance();
 
     // 2 threads for the executor.

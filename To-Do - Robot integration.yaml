@@ -1,0 +1,43 @@
+To-Do - Robot integration
+
+Files excluding C++ code:
+
+Launch_package
+- launch_app.launch.py - Done
+-- Lotsa debugging here.
+- launch_drivers.launch.py - Done
+-- Same for here.
+
+Standalone_Trajectory_Executor
+- executor_params.yaml - Done
+
+Object Detector
+- rv5as.urdf.xacro (/config/) - Done
+
+Machine State Control
+- machine_state_control.launch.py - Done
+- /config/rv5as.urdf.xacro -- ???? - Done
+- /config/rv4as_params.yaml - Done
+
+
+
+
+Needed additions:
+
+- irb120_moveit_config to replace melfa_rv5as_moveit_config : Used by machine_state_control.launch.py etc, and used by the motion planning.
+  --- Done
+
+- irb120_controller replacement for rv5as_controller : Used by /Standalone_Trajectory_Executor/config/executor_params.yaml
+- irb120 rviz packages : Used by app launch.
+
+- Look into abb_bringup launches : Used by driver launch, in melfa they were both seperate packages, here they appear the same package.
+  Working on abb_moveit.launch.py
+
+- custom_io_params.yaml needs to be updated : Used by control launch in rv5as version, and as rv5as_hardware shortcut in melfa_description urdf files.
+
+
+!!! Use -d -a as extra arguments for ros launch commands for stack traces.
+
+
+
+- 

@@ -13,10 +13,11 @@ namespace pick_solution_finder
     PickSolutionFinder::~PickSolutionFinder() {}
 
     PickSolutionFinder::PickSolutionFinder(
+        const rclcpp::Logger logger,
         const std::vector<custom_msgs::msg::LocatedObject>& detectedObjects,
         const std::vector<custom_msgs::msg::LocatedObject>& unknownAreas,
         const std::shared_ptr<moveit::planning_interface::MoveGroupInterface>& moveGroup)
-        : detectedObjects(detectedObjects), unknownAreas(unknownAreas), moveGroup(moveGroup)
+        : logger(logger), detectedObjects(detectedObjects), unknownAreas(unknownAreas), moveGroup(moveGroup)
     {}
 
     std::shared_ptr<PickSolution> PickSolutionFinder::findSolution()
@@ -31,6 +32,8 @@ namespace pick_solution_finder
             // test the poses for collisions
             for (const auto& pickPose : potentionalPickPoses)
             {
+                // auto rotatedPickPose = PickPoseUtils::rotatePose(pickPose,0.0,0.0,0.0); // <<! TODO:  Check which rotation is needed & crashes. >>
+
                 // Check if the pick pose causes a collision
                 if (!isPoseInCollision(pickPose))
                 {
@@ -46,8 +49,16 @@ namespace pick_solution_finder
                         {
                             // The solution is found.
                             return std::make_shared<PickSolution>(pickPose, retractPose);
+                        } else {
+                            // No solution found on last step.
+                            // Program never arrived here during test 14.
                         }
                     }
+                } else {
+                    // This pose is in collision.
+                    // Program did arrive here during test 13.
+                    // All generated test poses fail this test.
+                    RCLCPP_INFO(logger,"Pose failed collision/IK check.");
                 }
             }
         }
@@ -63,12 +74,14 @@ namespace pick_solution_finder
         moveit::core::RobotState robotState(robotModel);
         // set the robot state to have the TCP at the given pose
         const moveit::core::JointModelGroup* jointModelGroup = robotModel->getJointModelGroup(moveGroup->getName());
-        bool ikSuccess = robotState.setFromIK(jointModelGroup, pose, "rv5as_default_tcp");
-
+        bool ikSuccess = robotState.setFromIK(jointModelGroup, pose, "tool_tcp"); // HARDCODED : TODO
+ 
         // Check valid IK solution (if the state is actually possible)
         if (!ikSuccess)
         {
             // Could not find a valid IK solution, the robot can't reach the pose
+            RCLCPP_INFO(logger,"IK failed for current pose.");
+            
             return true;
         }
 
@@ -118,12 +131,13 @@ namespace pick_solution_finder
         std::string filteredSecond = filterBlockName(second);
         // Define a list of problematic contacts
         const static std::vector<std::pair<std::string, std::string>> problematicContacts = {
-            {"rv5as_schrunk_assista", "collision_block"},
-            {"rv5as_schrunk_assista", "crate"},
-            {"rv5as_wrist", "crate"},
-            {"rv5as_camera", "crate"},
-            {"rv5as_wrist", "rv5as_table_base"},
-            {"rv5as_camera", "rv5as_table_base"}};
+            {"tool_gripper", "collision_block"}, // collision_block check.
+            {"tool_gripper", "crate"},
+            {"link_5", "crate"}, // rv5as_wrist to link_5
+            {"camera_mount", "crate"}, 
+            {"camera_mount", "robot_stand"},   // The following have changed: "robot_stand" < "rv5as_table_base"; "camera_mount" < "rv5as_camera"; "tool_gripper" < "rv5as_schrunk_assista"
+            {"link_5", "robot_stand"} // HARDCODED : Might need a fix, currently manually changed.
+        };
 
         // Check if the contact pair is in the list of problematic contacts
         for (const auto& contact : problematicContacts)

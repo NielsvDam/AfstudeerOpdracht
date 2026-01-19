@@ -27,13 +27,15 @@ FIND_PACKAGE(rclcpp_action REQUIRED)
 FIND_PACKAGE(ament_index_cpp REQUIRED)
 FIND_PACKAGE(custom_msgs REQUIRED)
 FIND_PACKAGE(sensor_msgs REQUIRED)
+FIND_PACKAGE(moveit_msgs REQUIRED)
 
 SET(DEPENDENCIES
     rclcpp
     rclcpp_action
     ament_index_cpp
     custom_msgs
-    sensor_msgs)
+    sensor_msgs
+    moveit_msgs)
 
 INCLUDE_DIRECTORIES(include)
 

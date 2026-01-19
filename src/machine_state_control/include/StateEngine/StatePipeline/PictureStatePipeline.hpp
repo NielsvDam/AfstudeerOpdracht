@@ -3,9 +3,13 @@
 
 #include <geometry_msgs/msg/pose.h>         // geometry_msgs::msg::Pose
 #include <geometry_msgs/msg/pose_stamped.h> // geometry_msgs::msg::PoseStamped
+#include <geometry_msgs/msg/transform_stamped.h> // geometry_msgs::msg::TransformStamped
 
 #include "AbstractStatePipeline.hpp"          // state_pipeline::AbstractStatePipeline
 #include "StateEngine/State/PictureState.hpp" // state::PictureState
+
+// The maths
+#include <tf2_ros/buffer.h>
 
 /**
  * @namespace state_pipeline
@@ -62,6 +66,8 @@ namespace state_pipeline
     private:
         bool indirectStrategy;                      /* Flag to indicate if the indirect strategy is active. */
         geometry_msgs::msg::PoseStamped cameraPose; /* The position to take the picture from. */
+        // geometry_msgs::msg::PoseStamped cameraTcp; /* The position of the actual camera_tcp from the URDF file, used to calculate the offset between last link &  */
+        // geometry_msgs::msg::PoseStamped gripperTcp; /* The position of the 'gripper' defined in the params config file. Currently not the gripper, but the last part of the arm. */
         inline static const std::string LOGGER_NAME = "PictureStatePipeline";
     };
 } // namespace state_pipeline
