@@ -4,15 +4,17 @@
 
 using namespace std::chrono_literals; // Easy of use for the chrono_literals section.
 
-GripperController::~GripperController() {}
+GripperController::~GripperController() {};
 
-GripperController::GripperController() : 
-    logger(rclcpp::get_logger(LOGGER_NAME)), 
-    signalIn(MachineStateControlNode::getInstance()->get_parameter("signal_gripper_in").as_string()), 
-    signalOut(MachineStateControlNode::getInstance()->get_parameter("signal_gripper_out").as_string())
+GripperController::GripperController(std::string signal_in, std::string signal_out, rclcpp::Client<abb_robot_msgs::srv::GetIOSignal>::SharedPtr get_client, rclcpp::Client<abb_robot_msgs::srv::SetIOSignal>::SharedPtr set_client) : logger(rclcpp::get_logger(GRIPPER_LOGGER_NAME))
 {
-    this->getClient = MachineStateControlNode::getInstance()->create_client<abb_robot_msgs::srv::GetIOSignal>("/rws_client/get_io_signal");
-    this->setClient = MachineStateControlNode::getInstance()->create_client<abb_robot_msgs::srv::SetIOSignal>("/rws_client/set_io_signal");
+    signalIn = signal_in;
+    signalOut = signal_out;
+
+    getClient = get_client;
+    setClient = set_client;
+
+    RCLCPP_INFO(logger, "GripperController created succesfully.");
 }
 
 bool GripperController::setGripperState(bool state) { // Only 1 function to set it, because open/close functions would be almost identical.

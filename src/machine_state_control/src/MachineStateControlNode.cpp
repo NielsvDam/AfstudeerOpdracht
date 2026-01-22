@@ -19,7 +19,7 @@ MachineStateControlNode::MachineStateControlNode()
       pictureClient(rclcpp_action::create_client<custom_msgs::action::Picture>(this, "/take_picture")),
       // Create the path publisher
       pathPublisher(create_publisher<nav_msgs::msg::Path>("/path", 10)),
-      gripperController(GripperController())
+      gripperController(GripperController(get_parameter("signal_gripper_in").as_string(), get_parameter("signal_gripper_out").as_string(), create_client<abb_robot_msgs::srv::GetIOSignal>("/rws_client/get_io_signal"), create_client<abb_robot_msgs::srv::SetIOSignal>("/rws_client/set_io_signal")))
 {
     RCLCPP_INFO(this->get_logger(), "Machine control service started");
 }
@@ -56,19 +56,16 @@ GripperController& MachineStateControlNode::getGripperController()
     return gripperController;
 }
 
-const GripperController& MachineStateControlNode::getGripperController() const
-{
-    return gripperController;
-}
-
 void MachineStateControlNode::controlOperationStateCallback(
     const std::shared_ptr<custom_msgs::srv::MachineControl::Request>& request,
     const std::shared_ptr<custom_msgs::srv::MachineControl::Response>& response)
 {
+    RCLCPP_INFO(this->get_logger(), "Recieved a request about status.");
     if (request->command == "start")
     {
         stateEngine.setOperationState(OperationState::RUNNING);
         response->success = true;
+        RCLCPP_INFO(this->get_logger(), "Set the result 'success' to true.");
     }
     else if (request->command == "pause")
     {

@@ -77,9 +77,9 @@ namespace state_pipeline
             }
             case 2: // open gripper
             {
-                return std::make_shared<instruction::GripperInstruction>(false, "open gripper");
+                return std::make_shared<instruction::GripperInstruction>(true, "open gripper");
             }
-            case 3: // wait for gripper to close
+            case 3: // wait for gripper to open
             {
                 return std::make_shared<instruction::SleepInstruction>(125, "wait for gripper to open");
             }

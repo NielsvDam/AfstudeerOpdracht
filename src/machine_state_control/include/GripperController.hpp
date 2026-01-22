@@ -10,7 +10,7 @@
 #include <abb_robot_msgs/srv/set_io_signal.hpp>
 
 // Configuration for Logger etc. #define throws a error due to string usage, so:
-static const char LOGGER_NAME[] = "GripperController"; // Solution comes with aid from: https://forums.codeguru.com/showthread.php?48598-Is-it-bad-coding-practice-to-use-defines-for-string-literals. 
+static const char GRIPPER_LOGGER_NAME[] = "GripperController"; // Solution comes with aid from: https://forums.codeguru.com/showthread.php?48598-Is-it-bad-coding-practice-to-use-defines-for-string-literals. 
 
 /**
  * @class GripperController
@@ -22,11 +22,13 @@ static const char LOGGER_NAME[] = "GripperController"; // Solution comes with ai
 class GripperController
 {
 public:
-    virtual ~GripperController(); // Deconstructor.
     /**
-     *  @brief Instanciate the GripperController, intended to only be carried out for the MSC-Node.
+     *  @brief Create the GripperController, intended to only be carried out for the MSC-Node.
+     * 
+     *  @warning Really long constructor, in order to carry out a (last-minute) fix for self-referencing the MachineStateControlNode. Makes for some ugly codelines, sorry!
      */
-    GripperController();
+    GripperController(std::string signal_in, std::string signal_out, rclcpp::Client<abb_robot_msgs::srv::GetIOSignal>::SharedPtr get_client, rclcpp::Client<abb_robot_msgs::srv::SetIOSignal>::SharedPtr set_client);
+    virtual ~GripperController(); // Deconstructor.
 
     /**
      * @brief Set the gripper to closed/open (true/false).
@@ -42,16 +44,15 @@ public:
      */
     int8_t getGripperState();
 
-protected:
+private:
     rclcpp::Logger logger; /* The logger entity/object to write output messages to. */
 
-private:
     rclcpp::Client<abb_robot_msgs::srv::GetIOSignal>::SharedPtr getClient; /* Service client for getting IO state. */
 
     rclcpp::Client<abb_robot_msgs::srv::SetIOSignal>::SharedPtr setClient; /* Service client for setting IO state. */
 
-    const std::string signalIn; /* Intake signal name, set from params for statemachine. */
-    const std::string signalOut; /* Exhaust signal name, set from params for statemachine. */
+    std::string signalIn; /* Intake signal name, set from params for statemachine. */
+    std::string signalOut; /* Exhaust signal name, set from params for statemachine. */
 
 };
 

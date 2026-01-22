@@ -16,8 +16,8 @@ namespace instruction
     void GripperInstruction::execute()
     {
         int8_t output;
-
-        auto& gripperController = MachineStateControlNode::getInstance()->getGripperController();
+        
+        GripperController& gripperController = MachineStateControlNode::getInstance()->getGripperController();
 
         int8_t currentState = gripperController.getGripperState();
         if(currentState==-1){

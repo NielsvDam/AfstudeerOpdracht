@@ -12,8 +12,7 @@
 #include "StateEngine/StateExecutionHandler.hpp"     // state_engine::StateExecutionHandler
 #include "StateEngine/StateEngine.hpp"               // state_engine::StateEngine
 #include "OperationStateEnum.hpp"                    // OperationState
-
-#include <GripperController.hpp>                     // Implementation of the grippercontroller, change this if you need to change the grippercontroller again!
+#include <GripperController.hpp>                     // Implementation of the grippercontroller, change this if you need to change the grippercontroller again!                     // 
 
 /**
  * @class MachineStateControlNode
@@ -69,7 +68,6 @@ public:
      * @return GripperController The Gripper controller as object.
      */
     GripperController& getGripperController();
-    const GripperController& getGripperController() const;
 private:
     /**
      * @brief Constructs a new MachineStateControlNode object.

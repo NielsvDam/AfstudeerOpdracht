@@ -282,6 +282,7 @@ void HumanMachineInterface::onStartClicked()
     state = Running;
     updateButtonStates();
     configurationNode->start();
+    RCLCPP_INFO(configurationNode->get_logger(), "Start signal processed!");
 }
 
 void HumanMachineInterface::onPauseClicked()
