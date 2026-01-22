@@ -18,8 +18,8 @@ MachineStateControlNode::MachineStateControlNode()
       // Create the picture service client
       pictureClient(rclcpp_action::create_client<custom_msgs::action::Picture>(this, "/take_picture")),
       // Create the path publisher
-      pathPublisher(create_publisher<nav_msgs::msg::Path>("/path", 10))
-
+      pathPublisher(create_publisher<nav_msgs::msg::Path>("/path", 10)),
+      gripperController(GripperController())
 {
     RCLCPP_INFO(this->get_logger(), "Machine control service started");
 }
@@ -49,6 +49,16 @@ rclcpp_action::Client<custom_msgs::action::Picture>::SharedPtr MachineStateContr
 rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr MachineStateControlNode::getPathPublisher() const
 {
     return pathPublisher;
+}
+
+GripperController& MachineStateControlNode::getGripperController()
+{
+    return gripperController;
+}
+
+const GripperController& MachineStateControlNode::getGripperController() const
+{
+    return gripperController;
 }
 
 void MachineStateControlNode::controlOperationStateCallback(

@@ -18,7 +18,7 @@ jobs:
       image: ghcr.io/${{ github.repository }}/ros_base_image:main
       credentials:
         username: ${{ github.repository_owner }}
-        password: ${{ secrets.CONTAINER_REGISTERY }}
+        password: ${{ secrets.CONTAINER_REGISTERY }} # TODO: Returns as '', which causes the job to fail.
     steps:
       # Checkout the repository
       - name: Checkout code

@@ -15,13 +15,11 @@ namespace instruction
 
     void GripperInstruction::execute()
     {
-        // Alter this to reflect the new gripper system.
-        // Simply put: Replace request into open/close function to send out service calls.
         int8_t output;
 
-        auto gripperController = GripperController::getInstance();
+        auto& gripperController = MachineStateControlNode::getInstance()->getGripperController();
 
-        int8_t currentState = gripperController->getGripperState();
+        int8_t currentState = gripperController.getGripperState();
         if(currentState==-1){
             RCLCPP_INFO(logger, "Service call failed, check prior logger output.");
             return;
@@ -34,7 +32,7 @@ namespace instruction
         }
 
         // Carry out the open/close.
-        output = gripperController->gripperSet(open);
+        output = gripperController.setGripperState(open);
 
         // Check if output was a -1 to cut the further proces short.
         if (!(output == 1 || output == 0)) {

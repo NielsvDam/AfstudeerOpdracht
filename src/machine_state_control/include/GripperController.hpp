@@ -33,7 +33,7 @@ public:
      * 
      * @return bool Returns a bool to say if it worked or failed. (Same state as request = worked.)
      */
-    bool gripperSet(bool state);
+    bool setGripperState(bool state);
 
     /**
      * @brief Get the current state of the gripper.
@@ -46,11 +46,6 @@ protected:
     rclcpp::Logger logger; /* The logger entity/object to write output messages to. */
 
 private:
-    /**
-     * @brief Construct the GripperController object, only to be carried out once at a time.
-     */
-    GripperController();
-
     rclcpp::Client<abb_robot_msgs::srv::GetIOSignal>::SharedPtr getClient; /* Service client for getting IO state. */
 
     rclcpp::Client<abb_robot_msgs::srv::SetIOSignal>::SharedPtr setClient; /* Service client for setting IO state. */

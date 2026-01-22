@@ -15,12 +15,7 @@ GripperController::GripperController() :
     this->setClient = MachineStateControlNode::getInstance()->create_client<abb_robot_msgs::srv::SetIOSignal>("/rws_client/set_io_signal");
 }
 
-std::shared_ptr<GripperController> GripperController::getInstance() {
-    static std::shared_ptr<GripperController> instance{new GripperController};
-    return instance;
-}
-
-bool GripperController::gripperSet(bool state) { // Only 1 function to set it, because open/close functions would be almost identical.
+bool GripperController::setGripperState(bool state) { // Only 1 function to set it, because open/close functions would be almost identical.
     auto closeRequestIn = std::make_shared<abb_robot_msgs::srv::SetIOSignal::Request>();
     auto closeRequestOut = std::make_shared<abb_robot_msgs::srv::SetIOSignal::Request>();
     closeRequestIn->signal = signalIn;
