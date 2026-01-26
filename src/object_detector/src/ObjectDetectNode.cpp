@@ -435,7 +435,7 @@ std::vector<geometry_msgs::msg::Pose> ObjectDetectNode::detectObjects(
     double max; cv::minMaxIdx(distanceTransform,NULL,&max); 
     
     // Cut the transform to a layer of definitely foreground.
-    cv::threshold(distanceTransform, sureForeground, distanceTransformMultiplier*(float)max, 255, cv::THRESH_BINARY); 
+    cv::threshold(distanceTransform, sureForeground, distanceTransformMultiplier, 255, cv::THRESH_BINARY); 
 
     // Change sureForeground to CV_8UC1 to prevent the types from messing up again.
     sureForeground.convertTo(sureForeground, CV_8UC1);
@@ -448,20 +448,62 @@ std::vector<geometry_msgs::msg::Pose> ObjectDetectNode::detectObjects(
 
     cv::findContours(sureForeground, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
-    cv::imshow("Testing output",detectionImage);
-    cv::imshow("Sure Background",sureBackground);
-    cv::imshow("Distance transform", distanceTransform);
-    cv::imshow("Sure foreground", sureForeground);
+    // Watershed a U8C3 imagine, not a 32FC1 image.
 
-    cv::waitKey(0); // Delay unless pressed.
+    // Used to make the output look pretty: Not the best for performance.
+    cv::Mat markers = cv::Mat::zeros(distanceTransform.size(), CV_32SC1); // Create image for the markers.
+    for(std::size_t i = 0; i < contours.size(); i++) { // For every contour:
+        cv::drawContours(markers, contours, static_cast<int>(i), cv::Scalar(static_cast<int>(i)+1), -1); // Besides drawing contours, I don't actually know what the casts & scalar is for: https://docs.opencv.org/4.x/d2/dbd/tutorial_distance_transform.html
+    }
+    // Background marker
+    cv::circle(markers, cv::Point(5,5), 3, cv::Scalar(255), -1);
+
+    detectionImage.convertTo(detectionImage,CV_8UC1);
+    cv::cvtColor(detectionImage,detectionImage, cv::COLOR_GRAY2RGB);
+    markers.convertTo(markers, CV_32SC1);
 
     // For debugging, report all image types.
-    RCLCPP_INFO(this->get_logger(), "binaryworkImage type is: %i", binaryWorkImage.type());
-    RCLCPP_INFO(this->get_logger(), "tresholdImage type is: %i", tresholdImage.type());
-    RCLCPP_INFO(this->get_logger(), "sureBackground type is: %i", sureBackground.type());
-    RCLCPP_INFO(this->get_logger(), "distanceTransform type is: %i", distanceTransform.type());
-    RCLCPP_INFO(this->get_logger(), "sureForeground type is: %i", sureForeground.type());
     RCLCPP_INFO(this->get_logger(), "Max value from distance transform is %f", max);
+
+    cv::watershed(detectionImage, markers);
+
+    // Random colors for each contour.
+    std::vector<cv::Vec3b> colors;
+
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized" // Used to surpress GCC's uninitialized variable warns, due to a issue with handeling for loops.
+
+    for(std::size_t i; i < contours.size(); i++) {
+        int b = cv::theRNG().uniform(0,256);
+        int g = cv::theRNG().uniform(0,256);
+        int r = cv::theRNG().uniform(0,256);
+
+        colors.push_back(cv::Vec3b((uchar)b, (uchar)g, (uchar)r));
+    }
+
+    // Make and color in the resulting image.
+    cv::Mat watershedResult = cv::Mat::zeros(markers.size(), CV_8UC3);
+
+    for(int i=0; i < markers.rows; i++) {
+        for(int j=0; j < markers.cols; j++) {
+            int index = markers.at<int>(i,j);
+            if(index > 0 && index <= static_cast<int>(contours.size())) {
+                watershedResult.at<cv::Vec3b>(i,j) = colors[index-1];
+            }
+        }
+    }
+
+    #pragma GCC diagnostic pop
+
+    cv::imshow("Original Image: Step 0",detectionImage);
+    cv::imshow("Distance transform: Step 1", distanceTransform);
+    cv::imshow("Sure foreground: Step 2", sureForeground);
+    cv::imshow("Final Result: Step 3",watershedResult);
+
+    cv::waitKey(7000); // Delay until pressed or wait 7 seconds to inspect the output.
+    // cv::waitKey(0); // Delay indefinetly instead of only for 7 seconds unless pressed, use for debugging.
+
+    cv::destroyAllWindows(); // Close all windows: Not needed during the other processes.
 
     /* Numlookup for types:
            C1  C2   C3  C4

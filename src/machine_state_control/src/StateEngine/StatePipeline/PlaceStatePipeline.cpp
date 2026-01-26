@@ -81,7 +81,7 @@ namespace state_pipeline
             }
             case 3: // wait for gripper to open
             {
-                return std::make_shared<instruction::SleepInstruction>(125, "wait for gripper to open");
+                return std::make_shared<instruction::SleepInstruction>(500, "wait for gripper to open"); // Extended delay from 125ms for visualization purposes.
             }
             case 4: // move to retract pose
             {

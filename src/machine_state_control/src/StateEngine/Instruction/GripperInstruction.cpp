@@ -23,6 +23,8 @@ namespace instruction
         if(currentState==-1){
             RCLCPP_INFO(logger, "Service call failed, check prior logger output.");
             return;
+        } else if (currentState==2) {
+            RCLCPP_INFO(logger, "Service call succeeded, gripper in impossible state. Continue & fix.");
         }
         
         // For performance reasons, ignore request if gripper already at requested state.

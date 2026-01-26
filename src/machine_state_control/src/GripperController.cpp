@@ -56,33 +56,44 @@ bool GripperController::setGripperState(bool state) { // Only 1 function to set 
 }
 
 int8_t GripperController::getGripperState() {
-    auto requestRead = std::make_shared<abb_robot_msgs::srv::GetIOSignal::Request>();
-    requestRead->signal = signalIn; // Only need to check one to know if it's open or closed, checking both can be added for extra security.
+    auto requestReadIn = std::make_shared<abb_robot_msgs::srv::GetIOSignal::Request>();
+    auto requestReadOut = std::make_shared<abb_robot_msgs::srv::GetIOSignal::Request>();
+    requestReadIn->signal = signalIn; // Check In to determine open/closed state.
+    requestReadOut->signal = signalOut; // Check out to test and prevent error-states from occuring.
 
-    auto requestResult = getClient->async_send_request(requestRead);
+    auto requestResultIn = getClient->async_send_request(requestReadIn);
+    auto requestResultOut = getClient->async_send_request(requestReadOut);
 
     // // Spin the machinestatecontrol node until completed, probably not the best way to do it, adapted from .
     // // Due to issues with a adaption from https://docs.ros.org/en/crystal/Tutorials/Writing-A-Simple-Cpp-Service-And-Client.html, the get() command is used in it's blocking form.
     RCLCPP_WARN(logger,"Carrying out possible freezing actions.");
-    std::future_status status = requestResult.wait_for(5s);
-    std::shared_ptr<abb_robot_msgs::srv::GetIOSignal_Response> response;
+    std::future_status statusIn = requestResultIn.wait_for(2s);
+    std::future_status statusOut = requestResultOut.wait_for(2s);
+    std::shared_ptr<abb_robot_msgs::srv::GetIOSignal_Response> responseIn;
+    std::shared_ptr<abb_robot_msgs::srv::GetIOSignal_Response> responseOut;
 
-    if (status == std::future_status::ready) {
-        response = requestResult.get();
+    if (statusIn == std::future_status::ready && statusOut == std::future_status::ready) {
+        responseIn = requestResultIn.get();
+        responseOut = requestResultOut.get();
     } else {
         RCLCPP_ERROR(logger, "Response timed out after 5 seconds.");
         return int8_t(-1); // Timed out does mean failed.
     }
 
-    if (response->result_code != 1) {
-        RCLCPP_ERROR(logger, "Service returned non-1 result code: %i, with message: %s", response->result_code, response->message.c_str());
+    if (responseIn->result_code != 1 || responseOut->result_code != 1) {
+        RCLCPP_ERROR(logger, "Service returned non-1 result code: %i, %i; With messages: %s; %s", responseIn->result_code, responseOut->result_code, responseIn->message.c_str(), responseOut->message.c_str());
         return int8_t(-1); // Return a failed statement.
     }
 
+    if(!((responseIn->value == "0" && responseOut->value == "1") || (responseIn->value == "1" && responseOut->value == "0"))) {
+        RCLCPP_ERROR(logger, "Gripper in errorstate! Fixes itself next setGripperState command.");
+        return int8_t(2); // Return a 2 for a succesful get, but errorstate in the actual gripper IO.
+    }
+
     try {
-        return int8_t(std::stoi(response->value));
+        return int8_t(std::stoi(responseIn->value));
     } catch(const std::exception& e) { // Catch all expressions for the sake of simplicity, this atleast prevents crashing
-        RCLCPP_ERROR(logger,"Issue with conversion, message was: %s", response->value.c_str());
+        RCLCPP_ERROR(logger,"Issue with conversion, message was: %s", responseIn->value.c_str());
         return int8_t(-1);
     }
 }
