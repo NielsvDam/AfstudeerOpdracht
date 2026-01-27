@@ -4,13 +4,14 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /RobotModel1/Links1/tool_gripper1
+        - /Path1
       Splitter Ratio: 0.5
     Tree Height: 565
   - Class: rviz_common/Help
     Name: Help
   - Class: rviz_common/Views
-    Expanded: ~
+    Expanded:
+      - /Current View1
     Name: Views
     Splitter Ratio: 0.5
 Visualization Manager:
@@ -163,8 +164,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 0.08883249759674072
-        Min Value: 0.05289739370346069
+        Max Value: 0.06475377082824707
+        Min Value: 0.025273621082305908
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -198,7 +199,7 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        {}
+        object_detection: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -207,7 +208,7 @@ Visualization Manager:
         Value: /object_detect/markers
       Value: true
     - Alpha: 1
-      Buffer Length: 5
+      Buffer Length: 8
       Class: rviz_default_plugins/Path
       Color: 25; 255; 0
       Enabled: true
@@ -246,6 +247,129 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /display_contacts
       Value: true
+    - Class: moveit_rviz_plugin/Trajectory
+      Color Enabled: false
+      Enabled: true
+      Interrupt Display: false
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_tcp:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        crate:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        crate_foam:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        crate_inner_bottom_center:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        example:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        flange:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        link_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        link_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        link_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        link_4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        link_5:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        link_6:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        place_center:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_stand:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        tool0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        tool_gripper:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        tool_tcp:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+      Loop Animation: false
+      Name: Trajectory
+      Robot Alpha: 0.10000000149011612
+      Robot Color: 150; 50; 150
+      Robot Description: robot_description
+      Show Robot Collision: false
+      Show Robot Visual: true
+      Show Trail: true
+      State Display Time: 0.5s
+      Trail Step Size: 300
+      Trajectory Topic: /display_planned_path
+      Use Sim Time: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -279,10 +403,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3950002193450928
+      Pitch: 0.4100003242492676
       Target Frame: world
       Value: Orbit (rviz_default_plugins)
-      Yaw: 5.670178413391113
+      Yaw: 5.750178337097168
     Saved:
       - Class: rviz_default_plugins/Orbit
         Distance: 2
@@ -366,15 +490,17 @@ Visualization Manager:
         Yaw: 5.670178413391113
 Window Geometry:
   Displays:
-    collapsed: false
+    collapsed: true
   Height: 956
   Help:
     collapsed: false
-  Hide Left Dock: false
+  Hide Left Dock: true
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000001000000000000015600000362fc0200000007fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb000000100044006900730070006c006100790073010000003d000002b8000000c900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000160000001880000000000000000fb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a0056006900650077007301000002fb000000a4000000a400fffffffb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb0000003c005400720061006a006500630074006f007200790020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000000003540000036200000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
-  Views:
+  QMainWindow State: 000000ff00000000fd00000001000000000000015600000362fc0200000007fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb000000100044006900730070006c006100790073000000003d000002b8000000c900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000160000001880000000000000000fb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a0056006900650077007300000002fb000000a4000000a400fffffffb0000003c005400720061006a006500630074006f007200790020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000000004b00000036200000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Trajectory - Trajectory Slider:
     collapsed: false
+  Views:
+    collapsed: true
   Width: 1200
   X: 720
   Y: 27

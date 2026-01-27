@@ -64,8 +64,7 @@ int8_t GripperController::getGripperState() {
     auto requestResultIn = getClient->async_send_request(requestReadIn);
     auto requestResultOut = getClient->async_send_request(requestReadOut);
 
-    // // Spin the machinestatecontrol node until completed, probably not the best way to do it, adapted from .
-    // // Due to issues with a adaption from https://docs.ros.org/en/crystal/Tutorials/Writing-A-Simple-Cpp-Service-And-Client.html, the get() command is used in it's blocking form.
+    // // Due to issues with a adaption from https://docs.ros.org/en/crystal/Tutorials/Writing-A-Simple-Cpp-Service-And-Client.html, the get() command is used in it's blocking form (spin_until_finished flag)
     RCLCPP_WARN(logger,"Carrying out possible freezing actions.");
     std::future_status statusIn = requestResultIn.wait_for(2s);
     std::future_status statusOut = requestResultOut.wait_for(2s);
