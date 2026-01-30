@@ -12,7 +12,9 @@
 
 #include <opencv2/opencv.hpp> // Access to OpenCV functions.
 
-// #define DELAYED
+// #define DELAYED // Uncomment to add delays before taking the pictures to stabilize, allows simple usage of temporal filter (and/or just fixes picture instability).
+#define PROTOTYPE_PROCES // Uncomment to enable a prototype of a segmentation running before the normal detection. Currently does not affect the latter.
+
 // Additions to allow for temporary delay to be added. Not needed when simulating or when running with static camera.
 #ifdef DELAYED
 
@@ -376,7 +378,7 @@ std::vector<geometry_msgs::msg::Pose> ObjectDetectNode::detectObjects(
     debuggingMatrix = detectionMatrix; // Output NAN-filtered matrix without extracting surface as debugging matrix.
     MatrixFilters::sufaceExtractionFilter(detectionMatrix);
 
-    // MatrixFilters::morphOpen(detectionMatrix, morphologyKernelSize, morphologyIterations);
+    #ifdef PROTOTYPE_PROCES
 
     // Prototyping section
     // Transform matrix to cv2 points.
@@ -514,6 +516,8 @@ std::vector<geometry_msgs::msg::Pose> ObjectDetectNode::detectObjects(
     CV_32S	4	12	20	28
     CV_32F	5	13	21	29
     CV_64F	6	14	22	30 */
+
+    #endif
 
     std::vector<geometry_msgs::msg::Pose> poses;
     MatrixSegmentFinder<float> matrixSegmentFinder(detectionMatrix);

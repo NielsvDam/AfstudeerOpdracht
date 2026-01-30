@@ -16,4 +16,7 @@
 #define SURFACE_COLLECT_MAX_DIFF 3            // 3mm
 #define SURFACE_COLLECT_HISTORY_WINDOW_SIZE 4 // 4 cells
 
+#define GRIPPER_MINIMUM_RANGE 12 // 12mm minimum.
+#define GRIPPER_MAXIMUM_RANGE 24 // 24mm maximum
+
 #endif /* CONSTANTS_HPP */

@@ -57,8 +57,11 @@ namespace state_pipeline
         // Check if preferredPilzPlannerId is correct
         if (std::find(pilzIds.begin(), pilzIds.end(), preferredPilzPlannerId) == pilzIds.end())
         {
-            RCLCPP_ERROR(logger, "Preferred Pilz Planner ID %s is not valid", preferredPilzPlannerId.c_str());
-            throw std::invalid_argument("Atempted to use an invalid Pilz Planner ID");
+            if(preferredPilzPlannerId!="OMPL") // OMPL exception: If OMPL is specified, use it instead. Used for testcase.
+            {
+                RCLCPP_ERROR(logger, "Preferred Pilz Planner ID %s is not valid", preferredPilzPlannerId.c_str());
+                throw std::invalid_argument("Atempted to use an invalid Pilz Planner ID");
+            } 
         }
         // Move the preferredPilzPlannerId to the front
         pilzIds.erase(std::remove(pilzIds.begin(), pilzIds.end(), preferredPilzPlannerId), pilzIds.end());
@@ -68,6 +71,16 @@ namespace state_pipeline
         if (velocityScaling < 0.0)
         {
             velocityScaling = MachineStateControlNode::getInstance()->get_parameter("velocity_scaling").as_double();
+        }
+
+        if (preferredPilzPlannerId=="OMPL") { // If preferred ID is set to OMPL, do not try other options, immediatly go for the OMPL planner. Used for testcase.
+            auto trajectory = planTrajectory(targetPose, endEffectorLink, "ompl", "RRTstarkConfigDefault", velocityScaling);
+            if (trajectory) {
+                RCLCPP_INFO(logger, "OMPL succeeded");
+                return *trajectory;
+            }
+            RCLCPP_ERROR(logger, "OMPL failed. No trajectory found");
+            throw std::runtime_error("Failed to create trajectory");
         }
 
         // Try each pilz planner ID until one succeeds. (pilz is very quick, so we try it first before heavy OMPL)

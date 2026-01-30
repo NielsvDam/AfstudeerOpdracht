@@ -5,6 +5,8 @@
 #include "Matrix.hpp"
 #include "Conversion.hpp"
 
+#define PROTOTYPE_PROCES // Uncomment this to enable a currently partially functional detection system for cubes: They are still send to the system as 18mm cubes!
+
 template <class T>
 MatrixSegment<T>::~MatrixSegment()
 {}
@@ -38,10 +40,30 @@ void MatrixSegment<T>::detectBlocks()
     float width = minRect.size.width * CELL_SIZE;
     float height = minRect.size.height * CELL_SIZE;
 
+
+
     // Check if the rectangle represents more than one block
     if (std::abs(width - BLOCK_SIZE) > SINGLE_BLOCK_DETECTION_TOLERANCE ||
         std::abs(height - BLOCK_SIZE) > SINGLE_BLOCK_DETECTION_TOLERANCE)
     {
+        #ifdef PROTOTYPE_PROCES
+        // Segmentation can be carried out here, as well as before the seperation of segments: Though a more aggresive segmentation can be applied here to segment even closer blocks or parts.
+        // For now, a shorter implementation to also return blocks within the boundaries of the gripper: Currently these are 12mm to 24mm.
+        if ((std::abs(width) > GRIPPER_MAXIMUM_RANGE || std::abs(height) > GRIPPER_MAXIMUM_RANGE) || (std::abs(width) < GRIPPER_MINIMUM_RANGE || std::abs(height) < GRIPPER_MINIMUM_RANGE)) { return; } // Object is too big.
+        cv::Point2f rectCenter = minRect.center;
+        float angle = minRect.angle;
+        avgHeight += (width+height)/4; // A bit of a shortcut, but a cube has the same lengths for each dimension, average height & width for slightly more reliable number.
+
+        float rowPoint = rectCenter.x + rowOrigin;
+        float colPoint = rectCenter.y + colOrigin;
+
+        geometry_msgs::msg::Pose pose =
+            Conversion::matrixPointToPose(rowPoint, colPoint, avgHeight, 0.0, 180.0 * M_PI / 180.0, angle * M_PI / 180.0); // Turn it back into a quaternion, see below this if statement.
+
+        poses.push_back(pose); // Add the result to the list to be send back. !!! - Currently, these will be displayed as 18mm blocks, with currently no way to transfer scale data.
+                                // Adding a custom edit of the Pose type to include detected scale would be useful.
+        #endif
+
         // TODO: implement algorithm to detect multiple blocks in segment.
         //
         // Advice: Test erode filter on contours, since schrinking the contours results in very usable information about
@@ -50,7 +72,6 @@ void MatrixSegment<T>::detectBlocks()
 
         // Erode > Seperate/Identify individual objects > Dilate.
         // In (very) short terms: To seperate individual objects, be it for detecting close objects or stacked/piled, segmentation algorithms are used. Something like a watershed algorithm tends to work.
-
         return;
     }
 
