@@ -9,11 +9,14 @@
 #define CELL_SIZE 0.5 // in millimeters
 
 // algorithm specific settings
-#define BLOCK_HEIGHT_INDICATION_TOLERANCE 5 // 5mm
+#define BLOCK_HEIGHT_INDICATION_TOLERANCE 8 // Was 5mm, now 8mm
 #define BLOCK_SIZE 18.9                     // 18.9mm
 #define SINGLE_BLOCK_DETECTION_TOLERANCE 8  // 8mm. Tolerance to determine if a detected square is the size of a single block
 
 #define SURFACE_COLLECT_MAX_DIFF 3            // 3mm
 #define SURFACE_COLLECT_HISTORY_WINDOW_SIZE 4 // 4 cells
+
+#define GRIPPER_MINIMUM_RANGE 12 // 12mm minimum.
+#define GRIPPER_MAXIMUM_RANGE 24 // 24mm maximum
 
 #endif /* CONSTANTS_HPP */

@@ -24,7 +24,7 @@ TrajectoryExecutorNode::TrajectoryExecutorNode()
           std::bind(&TrajectoryExecutorNode::jointStateCallback, this, std::placeholders::_1))),
       // Create the publisher of the trajectory
       trajectoryToControllerPublisher(
-          this->create_publisher<trajectory_msgs::msg::JointTrajectory>(get_parameter("controller").as_string(), 10)) // <<! The current controller might be wrong in exec params, check this. >>
+          this->create_publisher<trajectory_msgs::msg::JointTrajectory>(get_parameter("controller").as_string(), 10))
       #ifdef PUBLISH_CURRENT
         , currentPathPublisher(this->create_publisher<moveit_msgs::msg::DisplayTrajectory>("/display_planned_path",10)) // Publisher for the current trajectory. Gets removed if PUBLISH_CURRENT isn't defined in the .hpp file.
       #endif
@@ -117,8 +117,8 @@ void TrajectoryExecutorNode::executeAction(
     double epsilon = goal_handle->get_goal()->joint_tollerance;
 
     #ifdef PUBLISH_CURRENT // Only publish current trajectory if the define for this is set in the .hpp file.
-    moveit_msgs::msg::RobotTrajectory robotTrajectory; // Turns out this is needed, and not inherently a part of the msg.
-    robotTrajectory.joint_trajectory = goal_handle->get_goal()->trajectory;
+    moveit_msgs::msg::RobotTrajectory robotTrajectory;
+    robotTrajectory.joint_trajectory = goal_handle->get_goal()->trajectory; // Not the same type, could/should be the cause of the issue of it not creating a visible path.
     display.trajectory.push_back(robotTrajectory);
 
     // In order to display it properly, it needs a start-state aswell, so:
@@ -133,12 +133,12 @@ void TrajectoryExecutorNode::executeAction(
     #endif
 
     // Publish trajectory
-    trajectoryToControllerPublisher->publish(trajectory);
+    trajectoryToControllerPublisher->publish(trajectory); // This does not recieve any info about the path succeeding, failing or anything similar. Not great, but for now it works.
     // Wait for final joint state to match
     std::unique_lock<std::mutex> lock(currentStateMutex);
     bool reached = false;
     // Wait for the trajectory to reach the target
-    while (!reached)
+    while (!reached) // We need a way to 'check' if it's done either here or build into the trajectoryToControllerPublisher.
     {
         // Wait for the joint state to be updated, to avoid unnecessary computation
         jointStateCv.wait(lock);

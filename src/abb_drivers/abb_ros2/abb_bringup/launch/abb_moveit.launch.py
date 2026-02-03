@@ -33,7 +33,7 @@ def launch_setup(context, *args, **kwargs):
     # MoveIt configuration
     moveit_config = (
         MoveItConfigsBuilder(
-            "abb_bringup", package_name=f"{moveit_config_package.perform(context)}" # <<!!! Need to figure out why this is listed as "abb_bringup" by default.
+            "abb_bringup", package_name=f"{moveit_config_package.perform(context)}"
         )
         .robot_description(
             file_path=os.path.join(
@@ -63,7 +63,7 @@ def launch_setup(context, *args, **kwargs):
                 "kinematics.yaml",
             )
         )
-        # MoveIt does not handle controller switching automatically
+        # Make sure MoveIt does not switch its controller output to match the driver's, and thus avoid the parallel executor entirely.
         .trajectory_execution(
             file_path=os.path.join(
                 get_package_share_directory(
@@ -111,7 +111,7 @@ def launch_setup(context, *args, **kwargs):
 
     # RViz
     rviz_base = os.path.join(
-        get_package_share_directory("abb_irb120_moveit_config"), "config" # <<! Change to abb_irb120 soon. >>
+        get_package_share_directory("abb_irb120_moveit_config"), "config"
     )
     rviz_config = os.path.join(rviz_base, "moveit.rviz")
     rviz_node = Node(

@@ -595,7 +595,7 @@
   <joint name="crate_foam_joint" type="fixed">
       <parent link="crate"/>
       <child link="crate_foam"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.003"/>
   </joint>
   <!-- Add the joint to connect the crate_inner_bottom_center to crate -->
   <joint name="crate_inner_bottom_center_joint" type="fixed">

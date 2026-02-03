@@ -12,6 +12,7 @@
 #include "StateEngine/StateExecutionHandler.hpp"     // state_engine::StateExecutionHandler
 #include "StateEngine/StateEngine.hpp"               // state_engine::StateEngine
 #include "OperationStateEnum.hpp"                    // OperationState
+#include <GripperController.hpp>                     // Implementation of the grippercontroller, change this if you need to change the grippercontroller again!                     // 
 
 /**
  * @class MachineStateControlNode
@@ -61,6 +62,12 @@ public:
      * @return rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr The Path Publisher.
      */
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr getPathPublisher() const;
+    /**
+     * @brief Get the Gripper Controller.
+     * 
+     * @return GripperController The Gripper controller as object.
+     */
+    GripperController& getGripperController();
 private:
     /**
      * @brief Constructs a new MachineStateControlNode object.
@@ -87,6 +94,8 @@ private:
     rclcpp_action::Client<custom_msgs::action::Picture>::SharedPtr pictureClient; /* The picture service client */
     // path publisher
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr pathPublisher; /* The path publisher */
+
+    GripperController gripperController; /* The Gripper controller, used to open/close the gripper. */
 };
 
 #endif // CONTROLNODE_HPP

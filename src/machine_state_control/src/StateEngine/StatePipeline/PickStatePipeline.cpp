@@ -49,7 +49,7 @@ namespace state_pipeline
         {
             case 0: // ensure gripper is open.
             {
-                return std::make_shared<instruction::GripperInstruction>(false, "open gripper");
+                return std::make_shared<instruction::GripperInstruction>(true, "open gripper");
             }
             case 1: // move to aboveCratePose.
             {
@@ -83,11 +83,11 @@ namespace state_pipeline
             }
             case 4: // close gripper.
             {
-                return std::make_shared<instruction::GripperInstruction>(true, "close gripper");
+                return std::make_shared<instruction::GripperInstruction>(false, "close gripper");
             }
             case 5: // wait for gripper to close.
             {
-                return std::make_shared<instruction::SleepInstruction>(125, "wait for gripper to close");
+                return std::make_shared<instruction::SleepInstruction>(500, "wait for gripper to close"); // Extended delay from 125ms for visualization purposes.
             }
             case 6: // move to retract pose.
             {

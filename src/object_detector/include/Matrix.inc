@@ -728,7 +728,7 @@ Matrix<T> Matrix<T>::inverse() const
 template <class T>
 void Matrix<T>::writeMatrixToImage(const std::string& path) const
 {
-    int type = cv::DataType<T>::type;
+    int type = cv::DataType<T>::type; 
     // Add more types if needed
     cv::Mat image(getRows(), getCols(), type);
 

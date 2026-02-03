@@ -126,3 +126,5 @@ std::vector<std::vector<Cell<T>>> MatrixSegmentFinder<T>::findClusteredCells()
     }
     return clusters;
 }
+
+

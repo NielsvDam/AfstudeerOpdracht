@@ -10,7 +10,11 @@
 #include "MatrixFilters.hpp"
 #include "Conversion.hpp"
 
-// #define DELAYED
+#include <opencv2/opencv.hpp> // Access to OpenCV functions.
+
+// #define DELAYED // Uncomment to add delays before taking the pictures to stabilize, allows simple usage of temporal filter (and/or just fixes picture instability).
+// #define PROTOTYPE_PROCES // Uncomment to enable a prototype of a segmentation running before the normal detection. Currently does not affect the latter.
+
 // Additions to allow for temporary delay to be added. Not needed when simulating or when running with static camera.
 #ifdef DELAYED
 
@@ -362,7 +366,7 @@ sensor_msgs::msg::PointCloud2::SharedPtr ObjectDetectNode::waitForPointCloud()
     objectPoses = transformedPoses;
 }
 
-/* static */ std::vector<geometry_msgs::msg::Pose> ObjectDetectNode::detectObjects(
+std::vector<geometry_msgs::msg::Pose> ObjectDetectNode::detectObjects(
     const Matrix<float>& originalMatrix,
     Matrix<float>& detectionMatrix,
     Matrix<float>& debuggingMatrix)
@@ -374,7 +378,146 @@ sensor_msgs::msg::PointCloud2::SharedPtr ObjectDetectNode::waitForPointCloud()
     debuggingMatrix = detectionMatrix; // Output NAN-filtered matrix without extracting surface as debugging matrix.
     MatrixFilters::sufaceExtractionFilter(detectionMatrix);
 
-    // MatrixFilters::morphOpen(detectionMatrix, morphologyKernelSize, morphologyIterations);
+    #ifdef PROTOTYPE_PROCES
+
+    // Prototyping section
+    // Transform matrix to cv2 points.
+    int detectionMatrix_x = detectionMatrix.getRows(); // 1120
+    int detectionMatrix_y = detectionMatrix.getCols(); // 720
+
+    RCLCPP_INFO(this->get_logger(), "Matrix is %i by %i",detectionMatrix_x,detectionMatrix_y);
+
+    cv::Mat detectionImage(detectionMatrix_y, detectionMatrix_x,CV_32FC1);
+    for (int index_x = 0; index_x < detectionMatrix_x; index_x++) {
+
+        for (int index_y = 0; index_y < detectionMatrix_y; index_y++) {
+
+            // Loop through every square in this matrix: Expensive to do.
+            float buffer = detectionMatrix.at(index_x,index_y);
+
+            if (std::isnan(buffer)) {
+                buffer = 0.0;
+            }
+
+            detectionImage.at<float>(index_y,index_x) = buffer;
+            // RCLCPP_INFO(this->get_logger(), "Set %i,%i to %f",index_y,index_x,detectionImage.at<float>(index_y,index_x));
+
+        }
+
+    }
+
+    float distanceTransformMultiplier = 0.7;
+
+    cv::Mat tresholdImage(detectionMatrix_x, detectionMatrix_y,CV_8UC1);
+    cv::Mat sureBackground(detectionMatrix_x, detectionMatrix_y,CV_8UC1);
+    cv::Mat distanceTransform(detectionMatrix_x, detectionMatrix_y,CV_32FC1);
+    cv::Mat sureForeground(detectionMatrix_x, detectionMatrix_y,CV_8UC1);
+
+    cv::Mat unknownRegions = cv::Mat(detectionMatrix_y, detectionMatrix_x,CV_8UC1);
+
+    cv::Mat binaryWorkImage(detectionMatrix_x, detectionMatrix_y,CV_8UC1);
+    
+    // Get inversion of what is definitely background.
+    cv::dilate(detectionImage, sureBackground, cv::Mat()); // Dilate with default 3,3 kernel.
+
+    // Change detectionImage to CV_8UC1.
+    detectionImage.convertTo(binaryWorkImage,CV_8UC1);
+    // Change sureBackground to CV_8UC1 to prevent messy types later on.
+    sureBackground.convertTo(sureBackground,CV_8UC1);
+
+    // Get inital treshhold to force binary values.
+    cv::threshold(binaryWorkImage,tresholdImage,0,255,cv::THRESH_BINARY | cv::THRESH_OTSU);
+
+    // Distancetransform turns a binary mask into a gradient from closest to furthest from pixel concentrations.
+    cv::distanceTransform(tresholdImage, distanceTransform, cv::DIST_L2, 5, CV_32FC1);
+    // Normalize image from full float length to 0.0 - 1.0 for visualization and further processing.
+    cv::normalize(distanceTransform, distanceTransform, 0.0, 1.0, cv::NORM_MINMAX);
+
+    // Assign and fill max with the maximum float in the image. Allows dynamic weighting for smaller or bigger object sizes. (double due to func requirements).
+    double max; cv::minMaxIdx(distanceTransform,NULL,&max); 
+    
+    // Cut the transform to a layer of definitely foreground.
+    cv::threshold(distanceTransform, sureForeground, distanceTransformMultiplier, 255, cv::THRESH_BINARY); 
+
+    // Change sureForeground to CV_8UC1 to prevent the types from messing up again.
+    sureForeground.convertTo(sureForeground, CV_8UC1);
+ 
+    // Determine which sections are unknown and to be filled in by the watershed algorithm.
+    cv::subtract(sureBackground,sureForeground,unknownRegions);
+
+    std::vector<std::vector<cv::Point>> contours;   
+    std::vector<cv::Vec4i> hierarchy; 
+
+    cv::findContours(sureForeground, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+    // Watershed a U8C3 imagine, not a 32FC1 image.
+
+    // Used to make the output look pretty: Not the best for performance.
+    cv::Mat markers = cv::Mat::zeros(distanceTransform.size(), CV_32SC1); // Create image for the markers.
+    for(std::size_t i = 0; i < contours.size(); i++) { // For every contour:
+        cv::drawContours(markers, contours, static_cast<int>(i), cv::Scalar(static_cast<int>(i)+1), -1); // Besides drawing contours, I don't actually know what the casts & scalar is for: https://docs.opencv.org/4.x/d2/dbd/tutorial_distance_transform.html
+    }
+    // Background marker
+    cv::circle(markers, cv::Point(5,5), 3, cv::Scalar(255), -1);
+
+    detectionImage.convertTo(detectionImage,CV_8UC1);
+    cv::cvtColor(detectionImage,detectionImage, cv::COLOR_GRAY2RGB);
+    markers.convertTo(markers, CV_32SC1);
+
+    // For debugging, report all image types.
+    RCLCPP_INFO(this->get_logger(), "Max value from distance transform is %f", max);
+
+    cv::watershed(detectionImage, markers);
+
+    // Random colors for each contour.
+    std::vector<cv::Vec3b> colors;
+
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized" // Used to surpress GCC's uninitialized variable warns, due to a issue with handeling for loops.
+
+    for(std::size_t i; i < contours.size(); i++) {
+        int b = cv::theRNG().uniform(0,256);
+        int g = cv::theRNG().uniform(0,256);
+        int r = cv::theRNG().uniform(0,256);
+
+        colors.push_back(cv::Vec3b((uchar)b, (uchar)g, (uchar)r));
+    }
+
+    // Make and color in the resulting image.
+    cv::Mat watershedResult = cv::Mat::zeros(markers.size(), CV_8UC3);
+
+    for(int i=0; i < markers.rows; i++) {
+        for(int j=0; j < markers.cols; j++) {
+            int index = markers.at<int>(i,j);
+            if(index > 0 && index <= static_cast<int>(contours.size())) {
+                watershedResult.at<cv::Vec3b>(i,j) = colors[index-1];
+            }
+        }
+    }
+
+    #pragma GCC diagnostic pop
+
+    cv::imshow("Original Image: Step 0",detectionImage);
+    cv::imshow("Distance transform: Step 1", distanceTransform);
+    cv::imshow("Sure foreground: Step 2", sureForeground);
+    cv::imshow("Final Result: Step 3",watershedResult);
+
+    cv::waitKey(7000); // Delay until pressed or wait 7 seconds to inspect the output.
+    // cv::waitKey(0); // Delay indefinetly instead of only for 7 seconds unless pressed, use for debugging.
+
+    cv::destroyAllWindows(); // Close all windows: Not needed during the other processes.
+
+    /* Numlookup for types:
+           C1  C2   C3  C4
+    CV_8U	0	8	16	24
+    CV_8S	1	9	17	25
+    CV_16U	2	10	18	26
+    CV_16S	3	11	19	27
+    CV_32S	4	12	20	28
+    CV_32F	5	13	21	29
+    CV_64F	6	14	22	30 */
+
+    #endif
 
     std::vector<geometry_msgs::msg::Pose> poses;
     MatrixSegmentFinder<float> matrixSegmentFinder(detectionMatrix);

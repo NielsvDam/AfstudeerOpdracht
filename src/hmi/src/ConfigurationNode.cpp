@@ -18,7 +18,9 @@ void ConfigurationNode::start()
     auto request = std::make_shared<custom_msgs::srv::MachineControl::Request>();
     request->command = "start";
     auto result = client->async_send_request(request);
+    RCLCPP_INFO(this->get_logger(), "Send a request to start the MachineStateControl.");
     result.wait();
+    RCLCPP_INFO(this->get_logger(), "Recieved the reply.");
     if (result.get()->success)
     {
         RCLCPP_INFO(this->get_logger(), "Machine control START successfully");

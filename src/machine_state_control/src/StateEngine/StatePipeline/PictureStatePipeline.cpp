@@ -159,6 +159,44 @@ namespace state_pipeline
                 RCLCPP_INFO(logger, "Taking picture."); // DEBUG prints.
                 return std::make_shared<instruction::PictureInstruction>("take picture");
             }
+            
+            /* 
+            // Uncomment this & recomment markCompleted() above to test the pathplanning on all 4 implemented planners with a basic test.
+            case 3:
+            {
+                geometry_msgs::msg::PoseStamped poseLIN = cameraPose;
+                poseLIN.pose.position.z += 0.1;
+                auto trajectory = createTrajectory(poseLIN, "tool_tcp", "LIN");
+                // return the indirect movement instruction
+                return std::make_shared<instruction::MovementInstruction>(trajectory, getGoalJointTolerance(),"TEST: LIN");
+            }
+            case 4:
+            {
+                geometry_msgs::msg::PoseStamped posePTP = cameraPose;
+                posePTP.pose.position.z -= 0.1;
+                auto trajectory = createTrajectory(posePTP, "tool_tcp", "PTP");
+                // return the indirect movement instruction
+                return std::make_shared<instruction::MovementInstruction>(trajectory, getGoalJointTolerance(),"TEST: PTP");
+            }
+            case 5:
+            {
+                geometry_msgs::msg::PoseStamped poseOMPL = cameraPose;
+                poseOMPL.pose.position.z += 0.1;
+                auto trajectory = createTrajectory(poseOMPL, "tool_tcp", "OMPL");
+                // return the indirect movement instruction
+                return std::make_shared<instruction::MovementInstruction>(trajectory, getGoalJointTolerance(),"TEST: OMPL");
+            }
+            case 6:
+            {
+                markCompleted();
+                geometry_msgs::msg::PoseStamped poseCIRC = cameraPose;
+                poseCIRC.pose.position.z -= 0.1;
+                auto trajectory = createTrajectory(poseCIRC, "tool_tcp", "CIRC");
+                // return the indirect movement instruction
+                return std::make_shared<instruction::MovementInstruction>(trajectory, getGoalJointTolerance(),"TEST: CIRC/OMPL");
+            }
+*/
+
             default:
             {
                 RCLCPP_WARN(logger, "Unknown instruction number %d", instructionNumber);
