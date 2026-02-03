@@ -13,7 +13,7 @@
 #include <opencv2/opencv.hpp> // Access to OpenCV functions.
 
 // #define DELAYED // Uncomment to add delays before taking the pictures to stabilize, allows simple usage of temporal filter (and/or just fixes picture instability).
-#define PROTOTYPE_PROCES // Uncomment to enable a prototype of a segmentation running before the normal detection. Currently does not affect the latter.
+// #define PROTOTYPE_PROCES // Uncomment to enable a prototype of a segmentation running before the normal detection. Currently does not affect the latter.
 
 // Additions to allow for temporary delay to be added. Not needed when simulating or when running with static camera.
 #ifdef DELAYED

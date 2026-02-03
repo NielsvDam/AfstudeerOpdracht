@@ -5,7 +5,7 @@
 #include "Matrix.hpp"
 #include "Conversion.hpp"
 
-#define PROTOTYPE_PROCES // Uncomment this to enable a currently partially functional detection system for cubes: They are still send to the system as 18mm cubes!
+// #define PROTOTYPE_PROCES // Uncomment this to enable a currently partially functional detection system for cubes: They are still send to the system as 18mm cubes!
 
 template <class T>
 MatrixSegment<T>::~MatrixSegment()
